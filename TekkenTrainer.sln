@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TekkenTrainer", "TekkenTrainer\TekkenTrainer.csproj", "{55F619C9-8AF4-4D79-9FB2-2459365E9433}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D0069BF-07BE-4A0B-BB19-F6707F5DCE97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Debug|x64.ActiveCfg = Debug|x64
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Debug|x64.Build.0 = Debug|x64
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Release|x64.ActiveCfg = Release|x64
+		{55F619C9-8AF4-4D79-9FB2-2459365E9433}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85F4F3B1-2437-42C2-B32C-047D30C827B9}
+	EndGlobalSection
+EndGlobal

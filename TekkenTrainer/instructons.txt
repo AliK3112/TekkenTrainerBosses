@@ -1,0 +1,93 @@
+1. 1 + 2 Chest Laser
+2. 1 + 2 Laser Cancel into unblockable punch by pressing 2
+3. d/b + 1+ 2 Ground Laser
+4. Extra kick in Spinning Demon
+5. f + 3 + 4: AND b + 3 + 4 Astral Projection
+6. 1, 1, 2: Last hit reaction changed
+7. 3 + 4, 3 + 4: Move speed increased
+8. f + 1 + 2: Magnificent Demon God Fist
+9. d/f + 1 + 2: Ultimate Rage Art
+10. Rage Art button RA without Devil de-transformation
+11. d/f + 2, 1, 2: Laser Scraper
+12. u + 1 OR u + 2 Juggle Escape
+13. u + 3 OR u + 4 Juggle Escape into Laser
+14. Pressing 3 or 4 will escape juggle on other side
+15. CD + 1 + 4: Heaven's Door throw
+16. Special Intro/Outro
+
+ASCENDED HEIHACHI:
+1. 1, 1, 2: last hit damage, recovery and reaction changed
+2. 1, 2, 2: last hit damage, recovery and reaction changed (now a screw attack)
+3. standing 4: revorery and reaction changed (now a screw attack)
+4. b + 4: pushback changed on standing/crouching opponent
+5. 3, 4: last hit damage, recovery and reaction changed
+6. d/f + 1, 1 + 2: Twin Pistons, -27 on block
+7. CD + 2 (hold d/f): Delayed Wind God Fist (acts like a EWGF)
+8. d + 2 + 3: Completey changed
+9. 3 + 4: Armoured Raijin Stance available
+10. Spinning Demon: kicks increased upto 6, properties changed
+11. d + 1 + 2: Ultimate Rage Art
+12. Rage Art button: Regular Rage Art
+13. Idle Stance: Added Eletric VFX
+14. Special Intro/Outro
+
+SHIN AKUMA:
+1. d + 3 + 4: Ashura Wen - Meter Recharge move
+
+2. Shakunestu Hadoken - 3 fired instead of 1
+
+3. Shin Ashura Senko - Teleport moves, speed increased
+
+4. Shin Goku Satsu - Ultimate Rage Art, damage increased
+
+5. Parry - Automatically performed on all kicks and punches
+
+6. Parry Note: Does not work on elbows, knees, throws, 
+   divekicks, rage arts, projectiles and more
+
+7. Focus Attack: Power crush level and speed increased
+
+8. Special Intro/Outro
+
+DEVIL KAZUMI:
+1. 1, 1, 2 - Last hit reaction changed
+
+2. f, f + 2 - Hit reaction changed
+
+3. b + 2 + 3 - Unblockable Launcher
+
+4. 1 + 3 + 4 - Laser + Tiger attack
+
+5. 3 + 4 - Flying Laser
+
+6. b + 3 + 4, 1 + 2 - Laser
+
+7. Juggle Escape - Randomly done automatically
+
+8. Special Intro/Outro
+
+ASURA JIN:
+1. b + 1 - Stance changed, follows:
+   1 - Ultimate Electric Thrusting Uppercut
+   2 - Ultimate Electric Wind Hook Fist
+   4 - Ultimate Lunging Low Roundhouse Kick
+
+2. d + 1 + 2 - Stance changed
+   Built-in sidestep to the right
+   Follow-up 1, 2 removed
+
+3. Anymove to Zen transition:
+   d/f + 1 - Electric Thrusting Uppercut
+   d/f + 2 - Electric Wind Hook Fist
+   d/f + 4 - Lunging Low Roundhouse Kick
+
+4. Does not work for 3, 1 ~ F Zen cancel
+
+5. Ultimate EWHF available:
+   As a cancel from Mental Alertness 3 by inputting 2
+   As a follow-up after WHF (on hit & block) by inputting f+2
+   As a follow-up after EWHF (on hit & block) by inputting f+2
+   As a follow-up after UEWHF (on hit & block) by inputting f+2
+   As a follow-up after neutral 4 (on hit) by inputting f+2
+
+6. Special Intro/Outro

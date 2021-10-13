@@ -1,0 +1,13 @@
+1707, 3 # Move Name: Mx_sKAM00_, Cancel list: 5207, idx 11
+1713, 3 # Move Name: Mx_sKAM00_, Cancel list: 5207, idx 12
+4262, 3 # Move Name: Mx_saving, Cancel list: 9981, idx 6
+4267, 3 # Move Name: Mx_saving, Cancel list: 9981, idx 7
+4547, 3 # Move Name: Ry_ShadohB, Cancel list: 10409, idx 1
+4564, 3 # Move Name: Ry_ShadohB2, Cancel list: 10420, idx 1
+4570, 3 # Move Name: Ry_ShadohB2, Cancel list: 10420, idx 2
+4575, 3 # Move Name: Ry_ShadohB2, Cancel list: 10420, idx 3
+5452, 0 # Move Name: Mx_Blocking_7CS, Cancel list: 11456, idx 3
+5475, 3 # Move Name: Mx_Blocking_7CS, Cancel list: 11456, idx 5
+5482, 3 # Move Name: Mx_Blocking_7CS, Cancel list: 11456, idx 6
+5660, 3 # Move Name: Mx_Direct, Cancel list: 11531, idx 18
+5665, 3 # Move Name: Mx_Direct, Cancel list: 11531, idx 19
