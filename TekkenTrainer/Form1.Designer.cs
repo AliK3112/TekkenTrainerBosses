@@ -69,7 +69,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoCheck = false;
-            this.checkBox1.Font = new System.Drawing.Font("! PEPSI !", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox1.ForeColor = System.Drawing.Color.SandyBrown;
             this.checkBox1.Location = new System.Drawing.Point(15, 201);
             this.checkBox1.Name = "checkBox1";
@@ -81,7 +81,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoCheck = false;
-            this.checkBox2.Font = new System.Drawing.Font("! PEPSI !", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox2.ForeColor = System.Drawing.Color.SandyBrown;
             this.checkBox2.Location = new System.Drawing.Point(15, 310);
             this.checkBox2.Name = "checkBox2";
@@ -107,7 +107,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoCheck = false;
-            this.checkBox3.Font = new System.Drawing.Font("! PEPSI !", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox3.ForeColor = System.Drawing.Color.SandyBrown;
             this.checkBox3.Location = new System.Drawing.Point(15, 422);
             this.checkBox3.Name = "checkBox3";
@@ -118,7 +118,7 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("! PEPSI !", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Tomato;
             this.label1.Location = new System.Drawing.Point(114, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
@@ -176,7 +176,7 @@
             // 
             this.checkBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox5.AutoCheck = false;
-            this.checkBox5.Font = new System.Drawing.Font("! PEPSI !", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox5.ForeColor = System.Drawing.Color.SandyBrown;
             this.checkBox5.Location = new System.Drawing.Point(292, 312);
             this.checkBox5.Name = "checkBox5";
@@ -205,7 +205,7 @@
             // 
             this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox4.AutoCheck = false;
-            this.checkBox4.Font = new System.Drawing.Font("! PEPSI !", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox4.ForeColor = System.Drawing.Color.SandyBrown;
             this.checkBox4.Location = new System.Drawing.Point(292, 201);
             this.checkBox4.Name = "checkBox4";
@@ -442,7 +442,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(550, 600);
             this.Name = "Form1";
-            this.Text = "TEKKEN 7 Bosses v4.20";
+            this.Text = "TEKKEN 7 Bosses v4.23";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel_instructions.ResumeLayout(false);

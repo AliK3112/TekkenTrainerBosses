@@ -1115,7 +1115,7 @@ namespace TekkenTrainer
             fileData.Clear();
             //requirements.Clear();
             byte[] Org = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
-            if (mem != null)
+            if (mem != null && mem.GetProcess() != null)
             {
                 mem.WriteBytes(hud_icon_addr, Org);
                 mem.VirtualFreeMemory(AllocatedMem);
