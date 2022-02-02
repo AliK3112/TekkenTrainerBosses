@@ -58,6 +58,7 @@
             this.panel_jin = new System.Windows.Forms.Panel();
             this.label_jin = new System.Windows.Forms.Label();
             this.checkBoxCostumes = new System.Windows.Forms.CheckBox();
+            this.button_update = new System.Windows.Forms.Button();
             this.panel_instructions.SuspendLayout();
             this.panel_kazuya.SuspendLayout();
             this.panel_heihachi.SuspendLayout();
@@ -285,7 +286,7 @@
             this.button_back.TabIndex = 16;
             this.button_back.Text = "Back";
             this.button_back.UseVisualStyleBackColor = true;
-            this.button_back.Click += new System.EventHandler(this.Button_Black_Click);
+            this.button_back.Click += new System.EventHandler(this.Button_Back_Click);
             // 
             // label2
             // 
@@ -406,6 +407,18 @@
             this.checkBoxCostumes.Text = "Moveset Depends on Costume";
             this.checkBoxCostumes.UseVisualStyleBackColor = true;
             // 
+            // button_update
+            // 
+            this.button_update.Font = new System.Drawing.Font("Agency FB", 15.75F);
+            this.button_update.ForeColor = System.Drawing.Color.Black;
+            this.button_update.Location = new System.Drawing.Point(28, 478);
+            this.button_update.Name = "button_update";
+            this.button_update.Size = new System.Drawing.Size(111, 39);
+            this.button_update.TabIndex = 24;
+            this.button_update.Text = "Update";
+            this.button_update.UseVisualStyleBackColor = true;
+            this.button_update.Click += new System.EventHandler(this.Button_Update_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -435,6 +448,7 @@
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.button_update);
             this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -442,7 +456,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(550, 600);
             this.Name = "Form1";
-            this.Text = "TEKKEN 7 Bosses v4.23";
+            this.Text = "TEKKEN 7 Bosses v4.24";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel_instructions.ResumeLayout(false);
@@ -487,6 +501,7 @@
         private System.Windows.Forms.Panel panel_jin;
         private System.Windows.Forms.Label label_jin;
         private System.Windows.Forms.CheckBox checkBoxCostumes;
+        private System.Windows.Forms.Button button_update;
     }
 }
 

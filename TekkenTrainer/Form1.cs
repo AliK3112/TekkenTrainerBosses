@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Memory.Win64;
 using System.IO;
+using System.Net;
 
 // TODO: Replacing long[,] array for storing cancels with Cancel[] arrays
 // and Implementing better ways to find cancel indexes
@@ -196,7 +197,7 @@ namespace TekkenTrainer
 
         static MemoryHelper64 mem = null;
         public static ulong baseAddress = 0;
-        // GAME VERSION: v4.20
+        // GAME VERSION: v4.24
 
         // Structure Addresses
         public static ulong p1struct;
@@ -240,7 +241,14 @@ namespace TekkenTrainer
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                try
+                {
+                    this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                }
+                catch(ObjectDisposedException ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
                 return;
             }
             textBox1.Text += value;
@@ -250,7 +258,14 @@ namespace TekkenTrainer
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(ClearTextBox), new object[] {value});
+                try
+                {
+                    this.Invoke(new Action<string>(ClearTextBox), new object[] { value });
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
                 return;
             }
             textBox1.Clear();
@@ -268,7 +283,7 @@ namespace TekkenTrainer
             i--;
             // define a function which assigns the checkbox checked state to the result
             Action checkCheckBox = new Action(() => result = boxes[i].Checked);
-            // check if it should be invoked.      
+            // check if it should be invoked.
             if (boxes[i].InvokeRequired)
                 boxes[i].Invoke(checkCheckBox);
             else
@@ -302,6 +317,7 @@ namespace TekkenTrainer
         {
             panel_kazuya.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // This is the button for Heihachi
@@ -309,6 +325,7 @@ namespace TekkenTrainer
         {
             panel_heihachi.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // This is the button for Akuma
@@ -316,6 +333,7 @@ namespace TekkenTrainer
         {
             panel_akuma.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // This button is for Devil Kazumi
@@ -323,6 +341,7 @@ namespace TekkenTrainer
         {
             panel_kazumi.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // This button is for Asura Jin
@@ -330,6 +349,7 @@ namespace TekkenTrainer
         {
             panel_jin.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // For bringing Forward instructions 
@@ -338,12 +358,47 @@ namespace TekkenTrainer
             panel_instructions.BringToFront();
             panel_instructions.Visible = true;
             button_back.Visible = true;
+            button_update.Visible = false;
         }
 
         // For going back to main menu
-        private void Button_Black_Click(object sender, EventArgs e)
+        private void Button_Back_Click(object sender, EventArgs e)
         {
             Panels_Visibility(false);
+            button_update.Visible = true;
+        }
+
+        // For update address file button
+        private void Button_Update_Click(object sender, EventArgs e)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                string[] req_files = { "AKUMA", "HEIHACHI", "JIN", "KAZUMI", "KAZUYA" };
+                wc.Headers.Add("a", "a");
+                string url1 = "https://raw.githubusercontent.com/AliK3112/TekkenTrainerBosses/master/TekkenTrainer/addresses.txt";
+                string path1 = "./addresses.txt";
+                string url2;
+                string path2;
+                try
+                {
+                    wc.DownloadFile(url1, @path1);
+                    foreach(string r in req_files)
+                    {
+                        url2 = $"https://raw.githubusercontent.com/AliK3112/TekkenTrainerBosses/master/TekkenTrainer/Requirements/{r}.txt";
+                        path2 = $"./Requirements/{r}.txt";
+                        wc.DownloadFile(url2, @path2);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                    Debug.WriteLine("Files Failed to Download");
+                    AppendTextBox("\nFiles Failed to Download");
+                    return;
+                }
+                Debug.WriteLine("Files Downloaded Successfully");
+                AppendTextBox("\nFiles Downloaded Successfully");
+            }
         }
 
         // For Cross button

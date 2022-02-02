@@ -130,7 +130,7 @@
 4.1 If "Moveset Depends on Costume" box is checked.
 4.2 Uncheck it to make boss moves load on any costume
 5. Upon success, the checkbox below character names will become marked.
-6. All addresses are in "addresses.txt" which you can update yourself whenever the game gets updated.</value>
+6. Press the "Update" button to update address &amp; requirement files.</value>
   </data>
   <data name="label_kazuya.Text" xml:space="preserve">
     <value>1. 1 + 2 Chest Laser

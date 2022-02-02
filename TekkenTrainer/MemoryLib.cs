@@ -225,7 +225,7 @@ namespace Memory.Utils
         public static byte[] GetBytes<T>(T Value)
         {
             string typename = typeof(T).ToString();
-            Console.WriteLine(typename);
+            //Console.WriteLine(typename);
             switch (typename)
             {
                 case "System.Single":
