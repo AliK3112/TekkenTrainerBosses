@@ -106,7 +106,7 @@ namespace Memory.Win64
 
         public ulong VirtualAllocate(int size = 1024)
         {
-            if (size < 0) return 0;
+            if (size <= 0) return 0;
             int power = 1;
             while (power < size)
                 power *= 2;

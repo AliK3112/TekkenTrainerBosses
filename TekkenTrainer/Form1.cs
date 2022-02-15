@@ -392,12 +392,10 @@ namespace TekkenTrainer
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.ToString());
-                    Debug.WriteLine("Files Failed to Download");
-                    AppendTextBox("\nFiles Failed to Download");
+                    AppendTextBox("Failed to download \"addresses.txt\"\r\n");
                     return;
                 }
-                Debug.WriteLine("Files Downloaded Successfully");
-                AppendTextBox("\nFiles Downloaded Successfully");
+                MessageBox.Show("Address & Requirement files updated successfully!");
             }
         }
 
