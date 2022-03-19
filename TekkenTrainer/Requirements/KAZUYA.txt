@@ -1,20 +1,19 @@
 48, 2    # Move Name: sDw_AIR00_ (2), Cancel list: 2, idx 10
 1668, 1  # Move Name: tac02xk (1665), Cancel list: 7837, idx 4
-#1882, -4 # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 1
+1882, -4 # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 1
 2381, 4  # Move Name: Kz_sKAM00_ (1435), Cancel list: 6026, idx 1
 2386, 0  # Move Name: Kz_sKAM00_ (1435), Cancel list: 6026, idx 2
 2981, 3  # Move Name: Kz_lplprp_DVL (1562), Cancel list: 7317, idx 17
 2990, 3  # Move Name: Kz_lplprp_DVL (1562), Cancel list: 7317, idx 18
 2999, 3  # Move Name: Kz_lplprp_DVL (1562), Cancel list: 7317, idx 19
 3008, 3  # Move Name: Kz_lplprp_DVL (1562), Cancel list: 7317, idx 20
-#3191, -5 # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 2
+3191, -5 # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 2
 3204, 4  # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 3
-3210, 3  # Move Name: Kz_vipLP (1600), Cancel list: 7513, idx 6
-3232, 3  # Move Name: Kz_vipLP (1600), Hit condition list: 348, idx 1
-#3410, -3 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 16
-#3516, -2 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 15
-#3555, -1 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 6
-#3624, -6 # Move Name: SKz_RageArts_sp_nRv3 (2218), Cancel list: 10177, idx 1
+3232, 4  # Move Name: Kz_vipLP (1600), Hit condition list: 348, idx 1
+3410, -3 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 16
+3516, -2 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 15
+3555, -1 # Move Name: Kz_majin_00 (1658),  Cancel list: 7802, idx 6
+3624, -6 # Move Name: SKz_RageArts_sp_nRv3 (2218), Cancel list: 10177, idx 1
 3642, 1  # Move Name: Kz_SpinRP (1673), Cancel list: 7858, idx 2
 4024, 2  # Move Name: Kz_m_k01 (1723), Cancel list: 8332, idx 3
 4255, 3  # Move Name: Kz_RageArts_nRv3 (2108), Cancel list: 9483, idx 2

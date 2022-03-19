@@ -703,53 +703,33 @@ namespace TekkenTrainer
 
         private bool DVKCancelRequirements(ulong MOVESET)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            List<Node> arr = FindInReqList("KAZUYA");
-            //stopwatch.Start();
-            int req_df2_combo_route = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 130, 0, 33005, 2, 96, 0, 608, 0, 127, 0, 66, 0, 881, 0 }, 3400); // -8 (3529)
-            if (true)
-            {
-                int req_juggle = FindReqIdx(MOVESET, new int[] { 558, 0, 359, 393217, 138, 1, 881, 0 }, 0); // (48)
-                int req_flag1 = FindReqIdx(MOVESET, new int[] { 559, 18, 33030, 65537, 881, 0 }, 980); // (1022)
-                int req_flag6 = FindReqIdx(MOVESET, new int[] { 559, 24, 225, 0, 33030, 393217, 881, 0 }, req_flag1 + 3); // (1070)
-                int req_stance = FindReqIdx(MOVESET, new int[] { 558, 0, 225, 0, 217, 9, 559, 27, 881, 0 }, 2200); // (2381)
-                int req_dev_revert = req_stance + 5;
-                int req_112 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 2, 0, 44, 0, 23, 1536, 0x8003, 0, 0x84c4, 0x7000010, 881, 0 }, 2870); // (2981)
-                int req_f12_f2 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 361, 1, 0x80ed, 0, 881, 0 }, 3150); // (3210)
-                int req_f12_hit = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 361, 1, 614, 0, 881, 0 }, req_f12_f2 + 6); // (3232)
-                int req_df2_f12 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 361, 1, 0x81C8, 6, 881, 0 }, req_df2_combo_route + 9); // -7 (3555)
-                int req_SD_HD = FindReqIdx(MOVESET, new int[] { 359, 393217, 344, 1, 44, 0, 2, 1536, 881, 0 }, 3900); // (4044)
-                int req_RA = FindReqIdx(MOVESET, new int[] { 558, 0, 225, 1, 559, 25, 881, 0 }, 4150); // (4255)
-                int req_ulitmate_RA = FindReqIdx(MOVESET, new int[] { 559, 25, 881, 0 }, req_RA+100); // (4412)
-                int req_intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, 4400); // (4523)
-                AddToReqList(req_juggle, 2, "KAZUYA");
-                AddToReqList(req_flag1, 1, "KAZUYA");
-                AddToReqList(req_flag6, 1, "KAZUYA");
-                AddToReqList(req_stance, 4, "KAZUYA");
-                AddToReqList(req_dev_revert, 0, "KAZUYA");
-                AddToReqList(req_112, 3, "KAZUYA");
-                AddToReqList(req_112 + 9, 3, "KAZUYA");
-                AddToReqList(req_112 + 18, 3, "KAZUYA");
-                AddToReqList(req_112 + 27, 3, "KAZUYA");
-                AddToReqList(req_f12_f2, 3, "KAZUYA");
-                AddToReqList(req_f12_hit, 3, "KAZUYA");
-                AddToReqList(req_df2_f12, -1, "KAZUYA");
-                AddToReqList(req_df2_combo_route, -7, "KAZUYA");
-                AddToReqList(req_SD_HD, -2, "KAZUYA");
-                AddToReqList(req_RA, 3, "KAZUYA");
-                AddToReqList(req_ulitmate_RA, 1, "KAZUYA");
-                AddToReqList(req_intro, 3, "KAZUYA");
-                AddToReqList(req_intro + 5, 3, "KAZUYA");
-                AddToReqList(req_intro +13, 3, "KAZUYA");
-            }
-            //stopwatch.Stop();
-            //Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
+            //int req_112_DVL = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 2, 0, 44, 0, 23, 1536, 32771, 0, 0x84C4, 0x7000010, 881, 0 }, 2800); // -6
 
+            //List<Node> req_array = new List<Node>();
+            //req_array.Add(new Node(FindReqIdx(MOVESET, new int[] { 559, 18, 0x8106, 0x10001, 881, 0 }, 1000), 3)); // 1022
+            //req_array.Add(new Node(FindReqIdx(MOVESET, new int[] { 559, 24, 225, 0, 0x8106, 0x60001, 881, 0 }, 1000), 3)); // 1022
+            //req_array.Add(new Node(req_112_DVL, 3));
+            //req_array.Add(new Node(req_112_DVL + 9, 3));
+            //req_array.Add(new Node(req_112_DVL + 18, 3));
+            //req_array.Add(new Node(req_112_DVL + 27, 3));
+            //Node[] arr =
+            //{
+            //    new Node(FindReqIdx(MOVESET, new int[] { 559, 18, 0x8106, 0x10001, 881, 0 }, 1000), 3), // 1022
+            //    new Node(req_112_DVL, 3), // 2981
+            //    new Node(req_112_DVL + 9, 3),
+            //    new Node(req_112_DVL + 18, 3),
+            //    new Node(req_112_DVL + 27, 3),
+            //};
             if (!RemoveRequirements(MOVESET, FindInReqList("KAZUYA"))) return false;
 
+            int req_df2_f12 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 361, 1, 0x81C8, 6, 881, 0 }, 3000); // -1
+            int req_df2_on_hit = FindReqIdx(MOVESET, new int[] { 44, 0, 0x8008, 0, 0x84C6, 0x1000019, 881, 0 }, 3100); // -2
+            int req_ch_df2 = FindReqIdx(MOVESET, new int[] { 130, 0, 96, 0, 92, 0, 0x84C6, 0x7000011, 0x84C6, 0x1000036, 0x8442, 2, 0x8443, 0x40A0525, 608, 0, 127, 0, 0x8003, 0, 881, 0 }, 3100); // -3
+            int req_f12_on_block = FindReqIdx(MOVESET, new int[] { 47, 0, 32769, 0, 881, 0 }, 1700); // -4
+            int req_f12_on_hit = FindReqIdx(MOVESET, new int[] { 44, 0, 44, 0, 0x84C4, 0x1000018, 0x84C4, 0x1000019, 0x84C4, 0x7000011, 608, 0, 127, 0, 0x8003, 0, 0x828C, 0x50014, 0x8442, 2, 0x8443, 0x4140523, 0x82DA, 1, 881, 0 }, 2900); // -5
             int req_story_RA = FindReqIdx(MOVESET, new int[] { 558, 0, 225, 1, 559, 24, 217, 9, 881, 0 }, 3300); // -6
+            int req_SD_HD = FindReqIdx(MOVESET, new int[] { 359, 393217, 344, 1, 44, 0, 2, 1536, 881, 0 }, 3800);
 
-            int Kz_sKAM00_ = GetMoveID(MOVESET, "Kz_sKAM00_\0", 1400);
             int Co_Dummy_00 = GetMoveID(MOVESET, "Co_Dummy_00\0", 563);
             int Co_Dummy_00_cancel_idx = GetMoveAttributeIndex(MOVESET, Co_Dummy_00, (int)Offsets.cancel_addr);
             if (Co_Dummy_00 < 0) return true;   // It means already written
@@ -765,22 +745,13 @@ namespace TekkenTrainer
             Cancel RA_Cancel = new Cancel(0x4000000300000008, -1, 14, 1, 32767, 1, (short)Kz_RageArts00, 80);
             Cancel RA_Cancel2 = new Cancel(0x4000000300000008, -1, 14, 1, 1, 1, (short)Kz_RageArts00, 80);
             Cancel RA_Cancel3 = new Cancel(0x4000000300000008, -1, 14, 1, 1, 1, (short)Kz_RageArts00, 80);
-            Cancel f12_f2_setup = new Cancel(0x0, -1, 16, 1, 1, 1, (short)GetMoveID(MOVESET, "Kz_vipLP_EX_7CS\0", 2100), 65);
+            Cancel SpinningDemon_HeavensDoor = new Cancel(0, req_SD_HD, 24, 26, 28, 26, (short)GetMoveID(MOVESET, "Kz_dsrp00n\0", Kz_majin_00), 65);
             FindCancelIndex(MOVESET, ref RA_Cancel, 1, 1500);
-            FindCancelIndex(MOVESET, ref RA_Cancel2, 0, 7449); // Fed old cancel index - 300 in there
+            FindCancelIndex(MOVESET, ref RA_Cancel2, 0, 7349); // Fed old cancel index - 400 in there
             FindCancelIndex(MOVESET, ref RA_Cancel3, 0, RA_Cancel2.index+1);
-            FindCancelIndex(MOVESET, ref f12_f2_setup, 0, 7450);
+            FindCancelIndex(MOVESET, ref SpinningDemon_HeavensDoor, 0, RA_Cancel3.index + 1);
             RA_Cancel.move_id = RA_Cancel2.move_id = RA_Cancel3.move_id = (short)Co_Dummy_00;
-            // Changing f+1+2 cancel # 4
-            f12_f2_setup.command = 0x4000000200000000;
-            f12_f2_setup.requirement_idx = req_df2_combo_route + 2;
-            f12_f2_setup.extradata_idx = 23;
-            f12_f2_setup.frame_window_start = 1;
-            f12_f2_setup.frame_window_end = 32;
-            f12_f2_setup.starting_frame = 1;
-            f12_f2_setup.move_id = (short)Kz_sKAM00_;
-            f12_f2_setup.type = 272;
-            
+            SpinningDemon_HeavensDoor.requirement_idx = req_SD_HD - 8;
             //Debug.WriteLine("Index = " + FindCancelIndex(MOVESET, ToFind, 1, 1500).ToString());
             Cancel[] array = 
             {
@@ -791,29 +762,42 @@ namespace TekkenTrainer
             int[] arr1 = new int[]
             {
                 Kz_RageArts00, // To, From is fixed to Co_Dummy_00 (838)
-            	//Kz_majin_00,
-                //Kz_vipLP
+            	Kz_majin_00,
+                Kz_vipLP
             };
             // Copying move "RageArt00" (2103) to "Co_Dummy_00" (838)
-            // Copying move "Kz_majin_00" (1658) to "Co_Dummy_02" (839) OBSELETE
-            // Copying move "Kz_vipLP" (1600) to "Co_Dummy_03" (840) OBSELETE
+            // Copying move "Kz_majin_00" (1658) to "Co_Dummy_02" (839)
+            // Copying move "Kz_vipLP" (1600) to "Co_Dummy_03" (840)
             if (!CopyMoves(MOVESET, arr1, Co_Dummy_00)) return false;
 
             int ind1 = Co_Dummy_00_cancel_idx; // Cancel list index for Co_Dummy_00
+            int Kz_sKAM00_ = GetMoveID(MOVESET, "Kz_sKAM00_\0", 1400);
             
             Cancel[] cancels_list =
             {
 		        // For Ultimate Rage Art
 		        new Cancel(ind1++, 0, 0, 11, 1, 1, 1, (short)GetMoveID(MOVESET, "SKz_RageArts01Treasure_7CS\0", 2000), 65),
                 new Cancel(ind1++, 0x8000, 0, 0, 0, 0, 0, (short)Kz_sKAM00_, 336),
-		        // For f+1+2,2 cancel (triggering input)
-		        f12_f2_setup,
+		        // For d/f+2,1 cancel
+                new Cancel(ind1++, 0, req_df2_f12 + 4, 52, 23, 23, 23, (short)Kz_vipLP, 65), // 3555 + 4
+                new Cancel(ind1++, 0, req_df2_on_hit, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 3516
+                new Cancel(ind1++, 0, req_ch_df2, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 3410
+                new Cancel(ind1++, 0x8000, 0, 0, 46, 32767, 46, (short)Kz_sKAM00_, 336),
+		        // For f+1+2,2 cancel
+		        new Cancel(ind1++, 0, req_f12_on_block, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 1882
+                new Cancel(ind1++, 0, req_f12_on_hit, 11, 1, 32767, 1, (short)(Kz_vipLP+1), 65), // 3191
+                new Cancel(ind1++, 0, 0, 16, 32, 32, 32, (short)GetMoveID(MOVESET, "Kz_bdyTuki\0", 1400), 65),
+                new Cancel(ind1++, 0x8000, 0, 0, 58, 32767, 58, (short)Kz_sKAM00_, 336),
+		        // For f+1+2,2 cancel (blending)
+		        new Cancel(GetMoveAttributeIndex(MOVESET, Kz_vipLP, (int)Offsets.cancel_addr) + 8, 0x4000000200000000, 0, 11, 1, 24, 24, (short)(Co_Dummy_00 + 2), 80),
 		        // For d/f+1 into Ultimate RA
                 RA_Cancel2,
                 // For d/f+2 into Ultimate RA
                 RA_Cancel3,
-                // For d/f+2,1 cancel (triggering input)
-                new Cancel(GetMoveAttributeIndex(MOVESET, Kz_majin_00, (int)Offsets.cancel_addr) + 1, 0x4000000100000000, -1, -1, -1, 23, -1, -1, 272),
+                // For d/f+2,1 cancel (blending)
+                new Cancel(GetMoveAttributeIndex(MOVESET, Kz_majin_00, (int)Offsets.cancel_addr) + 8, 0x4000000100000000, 0, 11, 1, 13, 13, (short)(Co_Dummy_00 + 1), 80),
+		        // For Stopping Forced Spinning Demon to Heaven's Door
+                SpinningDemon_HeavensDoor,
                 // For Stopping Story Rage Art from Coming out (cancel list: 10177, entry 2)
 		        new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "SKz_RageArts_sp_nRv3\0", 2000), (int)Offsets.cancel_addr) + 1, 0, req_story_RA, -1, -1, -1, -1, -1, -1) // 3624
             };
@@ -826,17 +810,27 @@ namespace TekkenTrainer
             {
                 {Co_Dummy_00+1, Co_Dummy_00_cancel_idx + 2} // Co_Dummy_02 (839), Index number to be assigned
             };
-            if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.cancel_list)) return false;     
+            if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.cancel_list)) return false;
 
-            // Disabling Rage after CD+1+4
-            int SKz_dslp_EX_grd_7CS = GetMoveID(MOVESET, "SKz_dslp_EX_grd_7CS\0", 2100);
-            // Getting address to special prop list
-            ulong addr = GetMoveAttributeAddress(MOVESET, SKz_dslp_EX_grd_7CS, 0x90);
-            mem.WriteMemory<int>(addr + 0x08, 881);
-            mem.WriteMemory<int>(addr + 0x0C, 0);
-            mem.WriteMemory<int>(addr + 0x28, 881);
-            mem.WriteMemory<int>(addr + 0x2C, 0);
-            return true; // Memory has been successfully edited
+            // Checking if Hit Conditions needs changes or not
+            ulong addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_narakudslp\0", Kz_majin_00), (int)Offsets.cancel_addr);
+            addr = mem.ReadMemory<ulong>(addr + (ulong)8);
+            //ind1 = GetAttributeIndex(addr, mem.ReadMemory<ulong>(addr + (ulong)OFFSETS.cancel_list), 40);
+            
+            addr = GetMoveAttributeAddress(MOVESET, Kz_vipLP, (int)Offsets.hit_cond_addr);
+            addr = mem.ReadMemory<ulong>(addr); // This will get the requirement address
+            if (mem.ReadMemory<int>(addr) != 0)
+            {
+                return true;
+            }
+
+            reqs = new int[,]
+            {
+                { Kz_vipLP, GetMoveAttributeIndex(MOVESET, Kz_vipLP, (int)Offsets.hit_cond_addr) + 2 },
+            };
+            // Adjusting hit condition
+            if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.hit_condition)) return false;
+            return true; // Memory has been successfully editied
         }
 
         private bool ASHCancelRequirements(ulong MOVESET)    // Ascended Heihachi requirements
@@ -1140,18 +1134,9 @@ namespace TekkenTrainer
 
         private bool BS7CancelRequirements(ulong MOVESET) // For Devil Kazumi
         {
+            // For removing requirements from cancels
+            // {RequirementIndex, how many requirements to zero}
             List<Node> arr = FindInReqList("KAZUMI");
-            if (arr.Count == 0)
-            {
-                int req_fly = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 138, 1, 545, 0, 881, 0 }, 0);
-                int req_112 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 2, 0, 44, 0, 23, 1536, 32771, 0, 33990, 117440528, 32814, 9, 881, 0 }, 1900);
-                int req_intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, 2400);
-                int req_outro = req_intro + 5;
-                AddToReqList(req_fly, 3, "KAZUMI");
-                AddToReqList(req_112, 3, "KAZUMI");
-                AddToReqList(req_intro, 3, "KAZUMI");
-                AddToReqList(req_outro, 3, "KAZUMI");
-            }
             if (!RemoveRequirements(MOVESET, arr)) return false;
 
             return true;  // This means the moveset has been modified successfully
@@ -1298,7 +1283,6 @@ namespace TekkenTrainer
             // Removing requirements from the given array
             for (int i = 0; i < rows; i++)
             {
-                if (arr[i].index < -900) continue;
                 addr = requirements_addr + (8 * (ulong)arr[i].index);
                 // Writing and replacing the code to make the HUD comeback and stop AI from reverting Devil Transformation
                 if (arr[i].value == 0 && GetCharID(moveset) == 9)
@@ -1306,45 +1290,6 @@ namespace TekkenTrainer
                     if (!mem.WriteMemory<int>(addr, 563)) return false;
                     if (!mem.WriteMemory<int>(addr + 16, 0x829D)) return false;
                     if (!mem.WriteMemory<int>(addr + 20, 1)) return false;
-                }
-                // Making changes into d/f+2 cancel that triggers d/f+2,1 string
-                else if (arr[i].value == -1 && GetCharID(moveset) == 9)
-                {
-                    if (!mem.WriteMemory<int>(addr, 361)) return false;
-                    if (!mem.WriteMemory<int>(addr + 4, 5)) return false;
-                    if (!mem.WriteMemory<int>(addr + 12, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 16, 33005)) return false;
-                    if (!mem.WriteMemory<int>(addr + 20, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 24, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 28, 0)) return false;
-                    arr[i].value = 0;
-                }
-                else if (arr[i].value == -2 && GetCharID(moveset) == 9)
-                {
-                    if (!mem.WriteMemory<int>(addr, 558)) return false;
-                    if (!mem.WriteMemory<int>(addr+4, 0)) return false;
-                }
-                // Making changes into d/f+2 cancel that triggers d/f+2,1 string
-                else if(arr[i].value == -7 && GetCharID(moveset) == 9)
-                {
-                    if (!mem.WriteMemory<int>(addr + 0, 33005)) return false;
-                    if (!mem.WriteMemory<int>(addr + 4, 5)) return false;
-                    if (!mem.WriteMemory<int>(addr + 8, 881)) return false;
-                    if (!mem.WriteMemory<int>(addr +12, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr +16, 33005)) return false;
-                    if (!mem.WriteMemory<int>(addr +20, 1)) return false;
-                    if (!mem.WriteMemory<int>(addr +24, 881)) return false;
-                    if (!mem.WriteMemory<int>(addr +28, 0)) return false;
-                    arr[i].value = 0;
-                }
-                // Making changes into f+1+2 cancel that triggers d/f+2,1,2 string
-                else if(arr[i].value == -8 && GetCharID(moveset) == 9)
-                {
-                    if (!mem.WriteMemory<int>(addr, 33005)) return false;
-                    if (!mem.WriteMemory<int>(addr + 4, 1)) return false;
-                    if (!mem.WriteMemory<int>(addr + 8, 881)) return false;
-                    if (!mem.WriteMemory<int>(addr + 12, 0)) return false;
-                    arr[i].value = 0;
                 }
                 // Handling the requirements to allow Akuma's parry
                 else if (arr[i].value == 0 && GetCharID(moveset) == 32)
@@ -1392,7 +1337,7 @@ namespace TekkenTrainer
                 if (j == pat_size) // if pattern[0...M-1] = text[i, i+1, ...i+M-1]
                     ind = i;
             }
-            ind = ind < 0 ? -999 : ind / 2;
+            ind = ind < 0 ? -1 : ind / 2;
             //Debug.WriteLine("Index = " + ind.ToString());
             return ind;
         }
@@ -1424,7 +1369,6 @@ namespace TekkenTrainer
                 //Debug.WriteLine(string.Format("{0:X}", ToMove));
                 for (int j = 0; j < 176 / 4; j++)
                 {
-                    //if (j == 0) continue;
                     if (j * 4 == 32) continue;
                     abc = mem.ReadMemory<int>(FromMove + (ulong)(j * 4));
                     //if (abc == 0) return false;
@@ -1711,40 +1655,34 @@ namespace TekkenTrainer
             }
 
             string[] Names = { "JIN", "HEIHACHI", "KAZUYA", "KAZUMI", "AKUMA" };
-            for (int i = 0; i < requirements.Length; i++)
+            string path = "Requirements/";
+            try
             {
-                List<Node> list = new List<Node>();         // creating new empty list
-                requirements[i] = new Req_Item(Names[i]);   // creating new requirement item
-                requirements[i].ptr = list;                 // assigning new empty list to that req. item
+                for (int i = 0; i < 5; i++)
+                {
+                    requirements[i] = new Req_Item(Names[i]);
+                    text = File.ReadAllLines(path + Names[i] + ".txt");
+                    if (text.Length == 0)
+                    {
+                        return;
+                    }
+                    List<Node> list = new List<Node>();
+                    foreach (string t in text)
+                    {
+                        Parse(t, ref list);
+                    }
+                    requirements[i].ptr = list;
+                }
             }
-            //string path = "Requirements/";
-            //try
-            //{
-            //    for (int i = 0; i < 5; i++)
-            //    {
-            //        requirements[i] = new Req_Item(Names[i]);
-            //        text = File.ReadAllLines(path + Names[i] + ".txt");
-            //        if (text.Length == 0)
-            //        {
-            //            return;
-            //        }
-            //        List<Node> list = new List<Node>();
-            //        foreach (string t in text)
-            //        {
-            //            Parse(t, ref list);
-            //        }
-            //        requirements[i].ptr = list;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    int result = ex.HResult;
-            //    if ((uint)result == 0x80070002 || (uint)result == 0x80070003)
-            //    {
-            //        return;
-            //    }
-            //    else throw ex;
-            //}
+            catch (Exception ex)
+            {
+                int result = ex.HResult;
+                if ((uint)result == 0x80070002 || (uint)result == 0x80070003)
+                {
+                    return;
+                }
+                else throw ex;
+            }
         }
 
         private ulong[] FindInList(string name)
@@ -1765,21 +1703,9 @@ namespace TekkenTrainer
             return null;
         }
 
-        private bool AddToReqList(int idx, int val, string name)
-        {
-            //int i = 0;
-            List<Node> list = FindInReqList(name);
-            foreach (Node a in list) // checking if item already exists
-            {
-                if (a.index == idx && a.value == val) return false;
-            }
-            list.Add(new Node(idx, val));
-            return true;
-        }
-
         private int FindIndexInList(string name, int v)
         {
-            //if (v >= 0) return -1;
+            if (v >= 0) return -1;
             foreach (Req_Item a in requirements)
             {
                 if (a.name == name)
