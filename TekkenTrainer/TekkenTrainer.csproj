@@ -26,7 +26,7 @@
     <ProductName>TEKKEN 7 BOSSES TRAINER</ProductName>
     <PublisherName>ALI KHALIL</PublisherName>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>18</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -75,10 +75,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>97AF6EFF973E5FCBB8A2F1E1ADB83CF9F511CE02</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>DE4C790DA16CD18B4D88D6234A1F31C0D37D21B8</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>TekkenTrainer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>TekkenTrainer_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -150,6 +150,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="TekkenTrainer_1_TemporaryKey.pfx" />
     <None Include="TekkenTrainer_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

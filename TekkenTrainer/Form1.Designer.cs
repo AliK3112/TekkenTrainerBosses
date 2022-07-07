@@ -59,6 +59,8 @@
             this.label_jin = new System.Windows.Forms.Label();
             this.checkBoxCostumes = new System.Windows.Forms.CheckBox();
             this.button_update = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.labelYouTube = new System.Windows.Forms.Label();
             this.panel_instructions.SuspendLayout();
             this.panel_kazuya.SuspendLayout();
             this.panel_heihachi.SuspendLayout();
@@ -97,7 +99,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.button_quit.Font = new System.Drawing.Font("Agency FB", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_quit.ForeColor = System.Drawing.Color.Black;
-            this.button_quit.Location = new System.Drawing.Point(187, 509);
+            this.button_quit.Location = new System.Drawing.Point(187, 505);
             this.button_quit.Name = "button_quit";
             this.button_quit.Size = new System.Drawing.Size(143, 40);
             this.button_quit.TabIndex = 4;
@@ -280,9 +282,9 @@
             this.button_back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_back.Font = new System.Drawing.Font("Agency FB", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_back.ForeColor = System.Drawing.Color.Black;
-            this.button_back.Location = new System.Drawing.Point(29, 483);
+            this.button_back.Location = new System.Drawing.Point(29, 479);
             this.button_back.Name = "button_back";
-            this.button_back.Size = new System.Drawing.Size(110, 30);
+            this.button_back.Size = new System.Drawing.Size(111, 39);
             this.button_back.TabIndex = 16;
             this.button_back.Text = "Back";
             this.button_back.UseVisualStyleBackColor = true;
@@ -371,7 +373,7 @@
             this.label_kazumi.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_kazumi.Location = new System.Drawing.Point(13, 13);
             this.label_kazumi.Name = "label_kazumi";
-            this.label_kazumi.Size = new System.Drawing.Size(486, 329);
+            this.label_kazumi.Size = new System.Drawing.Size(486, 393);
             this.label_kazumi.TabIndex = 17;
             this.label_kazumi.Text = resources.GetString("label_kazumi.Text");
             // 
@@ -400,18 +402,18 @@
             this.checkBoxCostumes.Checked = true;
             this.checkBoxCostumes.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxCostumes.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxCostumes.Location = new System.Drawing.Point(365, 465);
+            this.checkBoxCostumes.Location = new System.Drawing.Point(342, 460);
             this.checkBoxCostumes.Name = "checkBoxCostumes";
-            this.checkBoxCostumes.Size = new System.Drawing.Size(146, 70);
+            this.checkBoxCostumes.Size = new System.Drawing.Size(184, 84);
             this.checkBoxCostumes.TabIndex = 23;
-            this.checkBoxCostumes.Text = "Moveset Depends on Costume";
+            this.checkBoxCostumes.Text = "Moveset Depends on Costume / Auto-load Costumes";
             this.checkBoxCostumes.UseVisualStyleBackColor = true;
             // 
             // button_update
             // 
             this.button_update.Font = new System.Drawing.Font("Agency FB", 15.75F);
             this.button_update.ForeColor = System.Drawing.Color.Black;
-            this.button_update.Location = new System.Drawing.Point(28, 478);
+            this.button_update.Location = new System.Drawing.Point(29, 479);
             this.button_update.Name = "button_update";
             this.button_update.Size = new System.Drawing.Size(111, 39);
             this.button_update.TabIndex = 24;
@@ -419,12 +421,39 @@
             this.button_update.UseVisualStyleBackColor = true;
             this.button_update.Click += new System.EventHandler(this.Button_Update_Click);
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(5, 536);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(128, 19);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "Discord: Alee#0310";
+            // 
+            // labelYouTube
+            // 
+            this.labelYouTube.AutoSize = true;
+            this.labelYouTube.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelYouTube.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12F, System.Drawing.FontStyle.Underline);
+            this.labelYouTube.Location = new System.Drawing.Point(353, 536);
+            this.labelYouTube.Name = "labelYouTube";
+            this.labelYouTube.Size = new System.Drawing.Size(180, 19);
+            this.labelYouTube.TabIndex = 26;
+            this.labelYouTube.Text = "My YouTube Channel: AliK19";
+            this.labelYouTube.Click += new System.EventHandler(this.labelYouTube_Click);
+            this.labelYouTube.MouseEnter += new System.EventHandler(this.labelYouTube_MouseHover);
+            this.labelYouTube.MouseLeave += new System.EventHandler(this.labelYouTube_MouseLeave);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(534, 561);
+            this.Controls.Add(this.labelYouTube);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBoxCostumes);
             this.Controls.Add(this.panel_jin);
             this.Controls.Add(this.panel_kazumi);
@@ -456,7 +485,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(550, 600);
             this.Name = "Form1";
-            this.Text = "TEKKEN 7 Bosses v4.24";
+            this.Text = "TEKKEN 7 Bosses Trainer for v4.28";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel_instructions.ResumeLayout(false);
@@ -502,6 +531,8 @@
         private System.Windows.Forms.Label label_jin;
         private System.Windows.Forms.CheckBox checkBoxCostumes;
         private System.Windows.Forms.Button button_update;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelYouTube;
     }
 }
 

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Memory.Win64;
 using System.IO;
 using System.Net;
+using System.Drawing;
 
 // TODO: Replacing long[,] array for storing cancels with Cancel[] arrays
 // and Implementing better ways to find cancel indexes
@@ -35,7 +36,7 @@ namespace TekkenTrainer
                 move_id = type = -1;
             }
 
-            public Cancel(ulong cmd, int rq, int ed, int fs, int fe, int sf, short mi, short ty)
+            public Cancel(ulong cmd, int rq, int ed, int fs, int fe, int sf, int mi, int ty)
             {
                 index = -1;
                 command = cmd;
@@ -44,11 +45,11 @@ namespace TekkenTrainer
                 frame_window_start = fs;
                 frame_window_end = fe;
                 starting_frame = sf;
-                move_id = mi;
-                type = ty;
+                move_id = (short)mi;
+                type = (short)ty;
             }
 
-            public Cancel(int idx, ulong cmd, int rq, int ed, int fs, int fe, int sf, short mi, short ty)
+            public Cancel(int idx, ulong cmd, int rq, int ed, int fs, int fe, int sf, int mi, int ty)
             {
                 index = idx;
                 command = cmd;
@@ -57,11 +58,11 @@ namespace TekkenTrainer
                 frame_window_start = fs;
                 frame_window_end = fe;
                 starting_frame = sf;
-                move_id = mi;
-                type = ty;
+                move_id = (short)mi;
+                type = (short)ty;
             }
 
-            public static bool operator==(Cancel a, Cancel b)
+            public static bool operator ==(Cancel a, Cancel b)
             {
                 return (
                     a.index == b.index &&
@@ -98,7 +99,7 @@ namespace TekkenTrainer
                 return 0;
             }
 
-            public static bool operator!=(Cancel a, Cancel b)
+            public static bool operator !=(Cancel a, Cancel b)
             {
                 return (
                     a.index == b.index &&
@@ -215,7 +216,7 @@ namespace TekkenTrainer
         static readonly string cs_mrx_final = "/Game/Demo/StoryMode/Character/Sets/CS_MRX_final.CS_MRX_final";
 
         static readonly List<File_Item> fileData = new List<File_Item>();
-        static readonly Req_Item[] requirements = new Req_Item[5];
+        static readonly Req_Item[] requirements = new Req_Item[1];
         static bool IsRunning = false; // Variable to check if the game is running or not
         static readonly byte[] ORG_INST = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
         static byte[] BYTES_READ = { 0, 0, 0, 0, 0 }; // mov r13, [rsp+68]
@@ -245,7 +246,7 @@ namespace TekkenTrainer
                 {
                     this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
                 }
-                catch(ObjectDisposedException ex)
+                catch (ObjectDisposedException ex)
                 {
                     Debug.WriteLine(ex.ToString());
                 }
@@ -373,21 +374,12 @@ namespace TekkenTrainer
         {
             using (WebClient wc = new WebClient())
             {
-                string[] req_files = { "AKUMA", "HEIHACHI", "JIN", "KAZUMI", "KAZUYA" };
                 wc.Headers.Add("a", "a");
                 string url1 = "https://raw.githubusercontent.com/AliK3112/TekkenTrainerBosses/master/TekkenTrainer/addresses.txt";
                 string path1 = "./addresses.txt";
-                string url2;
-                string path2;
                 try
                 {
                     wc.DownloadFile(url1, @path1);
-                    foreach(string r in req_files)
-                    {
-                        url2 = $"https://raw.githubusercontent.com/AliK3112/TekkenTrainerBosses/master/TekkenTrainer/Requirements/{r}.txt";
-                        path2 = $"./Requirements/{r}.txt";
-                        wc.DownloadFile(url2, @path2);
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -395,8 +387,30 @@ namespace TekkenTrainer
                     AppendTextBox("Failed to download \"addresses.txt\"\r\n");
                     return;
                 }
-                MessageBox.Show("Address & Requirement files updated successfully!");
+                MessageBox.Show("\"addresses.txt\" file updated successfully!\t\t\t\t");
             }
+        }
+
+        // For clicking on YT label
+        private void labelYouTube_Click(object sender, EventArgs e)
+        {
+            if ((Label)sender != labelYouTube) return;
+            string target = "https://www.youtube.com/channel/UCskc9ke6LPWeZh1o2M240gw";
+            try { Process.Start(target); }
+            catch(Exception) {}
+        }
+
+        // When hovering over label
+        private void labelYouTube_MouseHover(object sender, EventArgs e)
+        {
+            if ((Label)sender != labelYouTube) return;
+            labelYouTube.ForeColor = Color.Gray;
+        }
+
+        private void labelYouTube_MouseLeave(object sender, EventArgs e)
+        {
+            if ((Label)sender != labelYouTube) return;
+            labelYouTube.ForeColor = Color.White;
         }
 
         // For Cross button
@@ -464,7 +478,7 @@ namespace TekkenTrainer
                     AppendTextBox("Attached to the game\r\nFinding Visuals Address...");
                     list = FindInList("visuals");
                     // Looping to find the address
-                    while(true)
+                    while (true)
                     {
                         visuals = mem.OffsetCalculator(list);
                         if (visuals != 0) break;
@@ -611,7 +625,7 @@ namespace TekkenTrainer
                 Thread.Sleep(10);
                 gameMode = GameMode();
                 if (gameMode == 3 || gameMode == 15) continue;
-                else if (gameMode == 4 || gameMode == 6)    // Vs mode and Player Match
+                else if (gameMode == 4 || gameMode == 6)    // Vs mode (6) and Player Match (4)
                 {
                     Costumes(0);
                     Costumes(1);
@@ -688,7 +702,7 @@ namespace TekkenTrainer
             else Checkboxes_checks(false); // Disabling All Check Boxes
             return Result;
         }
-        
+
         private ulong GetMovesetAddress(int side)
         {
             return mem.ReadMemory<ulong>(baseAddress + p1struct + motbinOffset + ((ulong)side * p1structsize));
@@ -703,41 +717,115 @@ namespace TekkenTrainer
 
         private bool DVKCancelRequirements(ulong MOVESET)
         {
-            //int req_112_DVL = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 2, 0, 44, 0, 23, 1536, 32771, 0, 0x84C4, 0x7000010, 881, 0 }, 2800); // -6
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong reqHeader = mem.ReadMemory<ulong>(MOVESET + 0x160);
+            ulong cancelHeader = mem.ReadMemory<ulong>(MOVESET + 0x1B0);
+            int reqSize = mem.ReadMemory<int>(MOVESET + 0x168);
+            // Editing requirements
+            int intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, reqSize - 350);
+            if (intro == -1) return true; // that means already written
+            int outro = intro == -1 ? -1 : intro + 13;
+            List<Node> introreqs = new List<Node>
+            {
+                new Node(intro, 3),
+                new Node(outro, 3),
+            };
+            if (!RemoveRequirements(MOVESET, introreqs)) return false;
 
-            //List<Node> req_array = new List<Node>();
-            //req_array.Add(new Node(FindReqIdx(MOVESET, new int[] { 559, 18, 0x8106, 0x10001, 881, 0 }, 1000), 3)); // 1022
-            //req_array.Add(new Node(FindReqIdx(MOVESET, new int[] { 559, 24, 225, 0, 0x8106, 0x60001, 881, 0 }, 1000), 3)); // 1022
-            //req_array.Add(new Node(req_112_DVL, 3));
-            //req_array.Add(new Node(req_112_DVL + 9, 3));
-            //req_array.Add(new Node(req_112_DVL + 18, 3));
-            //req_array.Add(new Node(req_112_DVL + 27, 3));
-            //Node[] arr =
-            //{
-            //    new Node(FindReqIdx(MOVESET, new int[] { 559, 18, 0x8106, 0x10001, 881, 0 }, 1000), 3), // 1022
-            //    new Node(req_112_DVL, 3), // 2981
-            //    new Node(req_112_DVL + 9, 3),
-            //    new Node(req_112_DVL + 18, 3),
-            //    new Node(req_112_DVL + 27, 3),
-            //};
-            if (!RemoveRequirements(MOVESET, FindInReqList("KAZUYA"))) return false;
+            int charID = GetCharID(MOVESET);
+            // Finding & editing/removing juggle escape req (48)
+            ulong addr = GetMoveAttributeAddress(MOVESET, 1, (int)Offsets.cancel_addr) + (40 * 9);
+            ulong raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 3, charID);
 
-            int req_df2_f12 = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 361, 1, 0x81C8, 6, 881, 0 }, 3000); // -1
-            int req_df2_on_hit = FindReqIdx(MOVESET, new int[] { 44, 0, 0x8008, 0, 0x84C6, 0x1000019, 881, 0 }, 3100); // -2
-            int req_ch_df2 = FindReqIdx(MOVESET, new int[] { 130, 0, 96, 0, 92, 0, 0x84C6, 0x7000011, 0x84C6, 0x1000036, 0x8442, 2, 0x8443, 0x40A0525, 608, 0, 127, 0, 0x8003, 0, 881, 0 }, 3100); // -3
-            int req_f12_on_block = FindReqIdx(MOVESET, new int[] { 47, 0, 32769, 0, 881, 0 }, 1700); // -4
-            int req_f12_on_hit = FindReqIdx(MOVESET, new int[] { 44, 0, 44, 0, 0x84C4, 0x1000018, 0x84C4, 0x1000019, 0x84C4, 0x7000011, 608, 0, 127, 0, 0x8003, 0, 0x828C, 0x50014, 0x8442, 2, 0x8443, 0x4140523, 0x82DA, 1, 881, 0 }, 2900); // -5
-            int req_story_RA = FindReqIdx(MOVESET, new int[] { 558, 0, 225, 1, 559, 24, 217, 9, 881, 0 }, 3300); // -6
-            int req_SD_HD = FindReqIdx(MOVESET, new int[] { 359, 393217, 344, 1, 44, 0, 2, 1536, 881, 0 }, 3800);
+            // Finding & editing/removing boss stance req (2381)
+            int Kz_sKAM00_ = mem.ReadMemory<short>(MOVESET + 0x2A);
+            addr = GetMoveAttributeAddress(MOVESET, Kz_sKAM00_, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 4, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 48); // 2nd cancel
+            RemoveRequirement(raddr, 0, charID);
+
+            //// Finding & editing/removing special chapter flag req (460)
+            //req = FindReqIdx(MOVESET, new int[] { 359, 393217, 344, 1, 881, 0 }, 400);
+            //raddr = reqHeader + (ulong)(8 * req);
+            //RemoveRequirement(raddr, 1, charID);
+
+            // Finding & editing/removing special chapter flag req (1668)
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_Ukemi2_7CS\0", 304), (int)Offsets.cancel_addr) + (40 * 2);
+            raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 1, charID);
+
+            // Finding & editing/removing 1,1,2 reqs (3017)
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_lprpF\0", 1545), (int)Offsets.cancel_addr);
+            if (addr == 0) return false; else addr -= (40 * 5);
+            raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 3, charID);
+            RemoveRequirement(raddr+72, 3, charID);  // go forward 9 idx
+            RemoveRequirement(raddr+144, 3, charID); // go forward 9 idx
+            RemoveRequirement(raddr+216, 3, charID); // go forward 9 idx
+            // Editing cancels to include "Held button"
+            for (int i = 0; i < 4; i++)
+            {
+                mem.WriteMemory<ulong>(addr + (ulong)(i * 40), 0x40000000000);
+                mem.WriteMemory<short>(addr + (ulong)(i * 40) + 38, 80);
+            }
+
+            // Finding & editing/removing f+1+2 reqs (3210)
+            int Kz_vipLP = GetMoveID(MOVESET, "Kz_vipLP\0", 1583);
+            if (Kz_vipLP < 0) return false;
+            addr = GetMoveAttributeAddress(MOVESET, Kz_vipLP+1, (int)Offsets.cancel_addr) - (40 * 5); // address of f12 cancel into f2
+            raddr = mem.ReadMemory<ulong>(addr + 8);
+            int req = GetAttributeIndex(raddr, reqHeader, 8);
+            if (!RemoveRequirement(mem.ReadMemory<ulong>(addr - 72), 1, charID)) return false;
+            if (!RemoveRequirement(raddr, -2, charID)) return false;
+            int idx = GetAttributeIndex(addr, cancelHeader, 40);
+            Cancel f12_f2_setup = new Cancel(idx++, 0x4000000200000000, req, 23, 1, 31, 1, 32769, 272);
+            Cancel f12_b4_setup = new Cancel(idx++, 0x4000000800000000, req + 2, 23, 1, 31, 1, 32769, 272);
+            Cancel f12_f2_cancel = new Cancel(idx++, 0, req + 5, -1, -1, -1, -1, -1, -1);
+            Cancel f12_b4_cancel = new Cancel(idx++, 0, req + 8, -1, -1, -1, -1, GetMoveID(MOVESET, "Kz_keriage0\0", Kz_vipLP + 1), -1);
+            // Editing hit conditions
+            addr = GetMoveAttributeAddress(MOVESET, Kz_vipLP, (int)Offsets.hit_cond_addr);
+            raddr = mem.ReadMemory<ulong>(addr);
+            if (!RemoveRequirement(raddr, 3, charID)) return false;
+            mem.WriteMemory<int>(raddr + 28, 5);
+            raddr = mem.ReadMemory<ulong>(addr+24);
+            if (!RemoveRequirement(raddr, 3, charID)) return false;
+            mem.WriteMemory<int>(raddr + 28, 6);
+
+            // Finding & editing/removing d/f+2 reqs (3555)
+            int Kz_majin_00 = GetMoveID(MOVESET, "Kz_majin_00\0", Kz_vipLP + 10);
+            if (Kz_majin_00 < 0) return false;
+            addr = GetMoveAttributeAddress(MOVESET, Kz_majin_00, (int)Offsets.cancel_addr); // address of df2 cancel list
+            // Finding cancel that has Kz_vipLP as move ID
+            while (mem.ReadMemory<int>(addr) != 0x8000)
+            {
+                if (mem.ReadMemory<short>(addr + 36) == Kz_vipLP) break;
+                addr += 40;
+            }
+            raddr = mem.ReadMemory<ulong>(addr + 48); // Reading requirement of 2nd cancel
+            idx = GetAttributeIndex(addr, cancelHeader, 40);
+            if(!RemoveRequirement(raddr, -1, charID)) return false;
+            Cancel df2_f12_setup = new Cancel(idx++, 0x4000000100000000, req, 23, 1, 22, 1, 32769, 272);
+
+            // Finding & editing/removing req for d+1+2
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_SpinRP\0", Kz_majin_00+14), (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 48); // Reading requirement of 2nd cancel
+            if (!RemoveRequirement(raddr, 1, charID)) return false;
+
+            // Finding & editing/removing req for CD+4,4
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_m_k01\0", Kz_majin_00 + 50), (int)Offsets.cancel_addr);
+            mem.WriteMemory<ulong>(addr + 8, reqHeader);
+
+            // Finding & editing/removing req for Rage Art detransformation
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_RageArts_nRv3\0", 2050), (int)Offsets.cancel_addr);
+            mem.WriteMemory<ulong>(addr + 48, reqHeader);
 
             int Co_Dummy_00 = GetMoveID(MOVESET, "Co_Dummy_00\0", 563);
             int Co_Dummy_00_cancel_idx = GetMoveAttributeIndex(MOVESET, Co_Dummy_00, (int)Offsets.cancel_addr);
             if (Co_Dummy_00 < 0) return true;   // It means already written
-
-            int Kz_vipLP = GetMoveID(MOVESET, "Kz_vipLP\0", 1400);
-            if (Kz_vipLP < 0) return false;
-            int Kz_majin_00 = GetMoveID(MOVESET, "Kz_majin_00\0", 1400);
-            if (Kz_majin_00 < 0) return false;
+            
             int Kz_RageArts00 = GetMoveID(MOVESET, "Kz_RageArts00\0", 2000);
             if (Kz_RageArts00 < 0) return false;
 
@@ -745,15 +833,11 @@ namespace TekkenTrainer
             Cancel RA_Cancel = new Cancel(0x4000000300000008, -1, 14, 1, 32767, 1, (short)Kz_RageArts00, 80);
             Cancel RA_Cancel2 = new Cancel(0x4000000300000008, -1, 14, 1, 1, 1, (short)Kz_RageArts00, 80);
             Cancel RA_Cancel3 = new Cancel(0x4000000300000008, -1, 14, 1, 1, 1, (short)Kz_RageArts00, 80);
-            Cancel SpinningDemon_HeavensDoor = new Cancel(0, req_SD_HD, 24, 26, 28, 26, (short)GetMoveID(MOVESET, "Kz_dsrp00n\0", Kz_majin_00), 65);
             FindCancelIndex(MOVESET, ref RA_Cancel, 1, 1500);
             FindCancelIndex(MOVESET, ref RA_Cancel2, 0, 7349); // Fed old cancel index - 400 in there
-            FindCancelIndex(MOVESET, ref RA_Cancel3, 0, RA_Cancel2.index+1);
-            FindCancelIndex(MOVESET, ref SpinningDemon_HeavensDoor, 0, RA_Cancel3.index + 1);
+            FindCancelIndex(MOVESET, ref RA_Cancel3, 0, RA_Cancel2.index + 1);
             RA_Cancel.move_id = RA_Cancel2.move_id = RA_Cancel3.move_id = (short)Co_Dummy_00;
-            SpinningDemon_HeavensDoor.requirement_idx = req_SD_HD - 8;
-            //Debug.WriteLine("Index = " + FindCancelIndex(MOVESET, ToFind, 1, 1500).ToString());
-            Cancel[] array = 
+            Cancel[] array =
             {
                 RA_Cancel
             };
@@ -762,44 +846,30 @@ namespace TekkenTrainer
             int[] arr1 = new int[]
             {
                 Kz_RageArts00, // To, From is fixed to Co_Dummy_00 (838)
-            	Kz_majin_00,
-                Kz_vipLP
+
             };
             // Copying move "RageArt00" (2103) to "Co_Dummy_00" (838)
-            // Copying move "Kz_majin_00" (1658) to "Co_Dummy_02" (839)
-            // Copying move "Kz_vipLP" (1600) to "Co_Dummy_03" (840)
             if (!CopyMoves(MOVESET, arr1, Co_Dummy_00)) return false;
 
             int ind1 = Co_Dummy_00_cancel_idx; // Cancel list index for Co_Dummy_00
-            int Kz_sKAM00_ = GetMoveID(MOVESET, "Kz_sKAM00_\0", 1400);
-            
+
             Cancel[] cancels_list =
             {
 		        // For Ultimate Rage Art
 		        new Cancel(ind1++, 0, 0, 11, 1, 1, 1, (short)GetMoveID(MOVESET, "SKz_RageArts01Treasure_7CS\0", 2000), 65),
                 new Cancel(ind1++, 0x8000, 0, 0, 0, 0, 0, (short)Kz_sKAM00_, 336),
-		        // For d/f+2,1 cancel
-                new Cancel(ind1++, 0, req_df2_f12 + 4, 52, 23, 23, 23, (short)Kz_vipLP, 65), // 3555 + 4
-                new Cancel(ind1++, 0, req_df2_on_hit, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 3516
-                new Cancel(ind1++, 0, req_ch_df2, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 3410
-                new Cancel(ind1++, 0x8000, 0, 0, 46, 32767, 46, (short)Kz_sKAM00_, 336),
-		        // For f+1+2,2 cancel
-		        new Cancel(ind1++, 0, req_f12_on_block, 23, 1, 32767, 1, (short)Kz_sKAM00_, 257), // 1882
-                new Cancel(ind1++, 0, req_f12_on_hit, 11, 1, 32767, 1, (short)(Kz_vipLP+1), 65), // 3191
-                new Cancel(ind1++, 0, 0, 16, 32, 32, 32, (short)GetMoveID(MOVESET, "Kz_bdyTuki\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 58, 32767, 58, (short)Kz_sKAM00_, 336),
-		        // For f+1+2,2 cancel (blending)
-		        new Cancel(GetMoveAttributeIndex(MOVESET, Kz_vipLP, (int)Offsets.cancel_addr) + 8, 0x4000000200000000, 0, 11, 1, 24, 24, (short)(Co_Dummy_00 + 2), 80),
-		        // For d/f+1 into Ultimate RA
+		        // For f+1+2,2 cancel (triggering input)
+		        f12_f2_setup,
+                f12_b4_setup,
+                f12_f2_cancel,
+                f12_b4_cancel,
+                
+                // For d/f+1 into Ultimate RA
                 RA_Cancel2,
                 // For d/f+2 into Ultimate RA
                 RA_Cancel3,
-                // For d/f+2,1 cancel (blending)
-                new Cancel(GetMoveAttributeIndex(MOVESET, Kz_majin_00, (int)Offsets.cancel_addr) + 8, 0x4000000100000000, 0, 11, 1, 13, 13, (short)(Co_Dummy_00 + 1), 80),
-		        // For Stopping Forced Spinning Demon to Heaven's Door
-                SpinningDemon_HeavensDoor,
-                // For Stopping Story Rage Art from Coming out (cancel list: 10177, entry 2)
-		        new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "SKz_RageArts_sp_nRv3\0", 2000), (int)Offsets.cancel_addr) + 1, 0, req_story_RA, -1, -1, -1, -1, -1, -1) // 3624
+                // For d/f+2,1 cancel (triggering input)
+                df2_f12_setup,
             };
 
             // Updating cancel lists
@@ -812,47 +882,90 @@ namespace TekkenTrainer
             };
             if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.cancel_list)) return false;
 
-            // Checking if Hit Conditions needs changes or not
-            ulong addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Kz_narakudslp\0", Kz_majin_00), (int)Offsets.cancel_addr);
-            addr = mem.ReadMemory<ulong>(addr + (ulong)8);
-            //ind1 = GetAttributeIndex(addr, mem.ReadMemory<ulong>(addr + (ulong)OFFSETS.cancel_list), 40);
-            
-            addr = GetMoveAttributeAddress(MOVESET, Kz_vipLP, (int)Offsets.hit_cond_addr);
-            addr = mem.ReadMemory<ulong>(addr); // This will get the requirement address
-            if (mem.ReadMemory<int>(addr) != 0)
+            // Stopping story RA from coming out.
+            int SKz_RageArts_sp_nRv3 = GetMoveID(MOVESET, "SKz_RageArts_sp_nRv3\0", Kz_RageArts00 + 100);
+            addr = GetMoveAttributeAddress(MOVESET, SKz_RageArts_sp_nRv3, (int)Offsets.cancel_addr);
+            if (mem.ReadMemory<short>(addr + 0x28 + 0x24) == SKz_RageArts_sp_nRv3 + 1)
             {
-                return true;
+                mem.WriteMemory<short>(addr + 0x28 + 0x24, (short)(SKz_RageArts_sp_nRv3 + 3));
             }
-
-            reqs = new int[,]
-            {
-                { Kz_vipLP, GetMoveAttributeIndex(MOVESET, Kz_vipLP, (int)Offsets.hit_cond_addr) + 2 },
-            };
-            // Adjusting hit condition
-            if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.hit_condition)) return false;
+            // Disabling Rage after CD+1+4
+            int SKz_dslp_EX_grd_7CS = GetMoveID(MOVESET, "SKz_dslp_EX_grd_7CS\0", 2100);
+            // Getting address to special prop list
+            addr = GetMoveAttributeAddress(MOVESET, SKz_dslp_EX_grd_7CS, 0x90);
+            mem.WriteMemory<int>(addr + 0x08, 881);
+            mem.WriteMemory<int>(addr + 0x0C, 0);
+            mem.WriteMemory<int>(addr + 0x28, 881);
+            mem.WriteMemory<int>(addr + 0x2C, 0);
+            stopwatch.Stop();
+            Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
             return true; // Memory has been successfully editied
         }
 
         private bool ASHCancelRequirements(ulong MOVESET)    // Ascended Heihachi requirements
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            //ulong reqHeader = mem.ReadMemory<ulong>(MOVESET + 0x160);
+            //ulong cancelHeader = mem.ReadMemory<ulong>(MOVESET + 0x1B0);
+            int reqSize = mem.ReadMemory<int>(MOVESET + 0x168);
             // Editing requirements
-            if (!RemoveRequirements(MOVESET, FindInReqList("HEIHACHI"))) return false;
+            int intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, reqSize - 750);
+            if (intro == -1) return true; // that means already written
+            int outro = intro == -1 ? -1 : intro + 5;
+            List<Node> introreqs = new List<Node>
+            {
+                new Node(intro, 3),
+                new Node(outro, 3),
+            };
+            if (!RemoveRequirements(MOVESET, introreqs)) return false;
+
+            int He_sKAM00_ = mem.ReadMemory<short>(MOVESET + 0x2A);
+            int charID = GetCharID(MOVESET);
+            // Finding & editing/removing boss stance req (2730)
+            ulong addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "He_lpf\0", He_sKAM00_+91), (int)Offsets.cancel_addr);
+            ulong raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 4, charID);
+
+            // Finding & editing/removing battering ram req (3441)
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "He_t_srp02\0", 1610), (int)Offsets.cancel_addr);
+            addr += 40 * 15; // 16th cancel
+            raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 3, charID);
+
+            // Finding & editing/removing whf req (3669)
+            int He_shoryu_N = GetMoveID(MOVESET, "He_shoryu_N\0", 1650);
+            addr = GetMoveAttributeAddress(MOVESET, He_shoryu_N, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + 40 * 11); // 12th cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + 40 * 13); // 14th cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + 40 * 14); // 15th cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + 40 * 15); // 16th cancel
+            RemoveRequirement(raddr, 3, charID);
+            // Modifying hit condition
+            addr = GetMoveAttributeAddress(MOVESET, He_shoryu_N, (int)Offsets.hit_cond_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 24); // 2nd hit condition
+            RemoveRequirement(raddr, 3, charID);
+
+            // Editing requirements
+            //if (!RemoveRequirements(MOVESET, FindInReqList("HEIHACHI"))) return false;
 
             int Co_Dummy_00 = GetMoveID(MOVESET, "Co_Dummy_00\0", 800);
             int Co_Dummy_00_cancel_idx = GetMoveAttributeIndex(MOVESET, Co_Dummy_00, (int)Offsets.cancel_addr);
             if (Co_Dummy_00 < 0) return true; // Already written
-            int He_RageArts00 = GetMoveID(MOVESET, "He_RageArts00\0", 1600);
+            int He_RageArts00 = GetMoveID(MOVESET, "He_RageArts00\0", 1800);
             int He_WK00F_7CS = GetMoveID(MOVESET, "He_WK00F_7CS\0", 1600);
-            int He_sKAM00_ = GetMoveID(MOVESET, "He_sKAM00_\0", 1400);
-            Cancel RAI_Cancel = new Cancel(0x4000000C00000020, 0, 14, 1, 32767, 1, (short)GetMoveID(MOVESET, "He_lk00\0", 1400), 80);
-            Cancel RA_Cancel = new Cancel(0x4000000300000004, -1, 14, 1, 32767, 1, (short)He_RageArts00, 80);
-            Cancel RA_Cancel2 = new Cancel(0x4000000300000004, -1, 14, 1, 1, 1, (short)He_RageArts00, 80);
-            Cancel RA_Cancel3 = new Cancel(0x4000000300000004, -1, 14, 1, 1, 1, (short)He_RageArts00, 80);
+            Cancel RAI_Cancel = new Cancel(0x4000000C00000020, 0, 14, 1, 32767, 1, GetMoveID(MOVESET, "He_lk00\0", 1400), 80);
+            Cancel RA_Cancel = new Cancel(0x4000000300000004, -1, 14, 1, 32767, 1, He_RageArts00, 80);
+            Cancel RA_Cancel2 = new Cancel(0x4000000300000004, -1, 14, 1, 1, 1, He_RageArts00, 80);
+            Cancel RA_Cancel3 = new Cancel(0x4000000300000004, -1, 14, 1, 1, 1, He_RageArts00, 80);
             FindCancelIndex(MOVESET, ref RAI_Cancel, 1, 750);
             RAI_Cancel.move_id = (short)He_WK00F_7CS;
             FindCancelIndex(MOVESET, ref RA_Cancel, 1, 1400);
-            FindCancelIndex(MOVESET, ref RA_Cancel2, 0, 7775);
-            FindCancelIndex(MOVESET, ref RA_Cancel3, 0, RA_Cancel2.index+1);
+            FindCancelIndex(MOVESET, ref RA_Cancel2, 0, GetMoveAttributeIndex(MOVESET, He_shoryu_N-30, (int)Offsets.cancel_addr));
+            FindCancelIndex(MOVESET, ref RA_Cancel3, 0, RA_Cancel2.index + 1);
             RA_Cancel.move_id = RA_Cancel2.move_id = RA_Cancel3.move_id = (short)Co_Dummy_00;
             // Writing into group cancels
             Cancel[] cancels =
@@ -860,15 +973,10 @@ namespace TekkenTrainer
                 RAI_Cancel, RA_Cancel
             };
 
-            //long[,] arr = new long[,]
-            //{
-            //    {899, -1, -1, -1, -1, -1, -1, He_WK00F_7CS, -1}, // 892 + 7
-            //    {1673, -1, -1, -1, -1, -1, -1, Co_Dummy_00, -1}  // 1541 + 132
-            //};
             if (!Edit_Cancels(MOVESET, cancels, 1)) return false;
 
             // This array is for copying moves
-            int[] arr1 = 
+            int[] arr1 =
             {
                 He_RageArts00 // He_RageArt00
             };
@@ -884,21 +992,21 @@ namespace TekkenTrainer
             if (ind2 < 0) return false;
             // Updating cancel lists
             // {index, command, req_idx, ext_idx, w_start, w_end, starting_frame, move, option}
-            Cancel[] arr = 
+            Cancel[] arr =
             {
                 // For Ultimate Rage Art
-		        new Cancel(ind1++, 0, 0, 11, 7, 7, 7, (short)GetMoveID(MOVESET,"He_RageArts01_Treasure_7CS\0", 1600), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 0, 0, 0, (short)He_sKAM00_, 336),
+		        new Cancel(ind1++, 0, 0, 11, 7, 7, 7, GetMoveID(MOVESET,"He_RageArts01_Treasure_7CS\0", 1600), 65),
+                new Cancel(ind1++, 0x8000, 0, 0, 0, 0, 0, He_sKAM00_, 336),
 		        // For Spinning Demon (kick 1)
-		        new Cancel(ind1++, 0x4000000100000000, 0, 11, 1, 15, 15, (short)GetMoveID(MOVESET,"He_m_k00AG\0", 1600), 80),
-                new Cancel(ind1++, 0x400000080000004E, 0, 16, 1, 16, 16, (short)He_m_k01M_CS, 80),
-                new Cancel(ind1++, 0x4000000800000000, 0, 11, 1, 15, 15, (short)GetMoveID(MOVESET,"He_m_k00DG\0", 1600), 80),
-                new Cancel(ind1++, 0x8000, 0, 0, 49, 32767, 49, (short)He_sKAM00_, 336),
+		        new Cancel(ind1++, 0x4000000100000000, 0, 11, 1, 15, 15, GetMoveID(MOVESET,"He_m_k00AG\0", 1600), 80),
+                new Cancel(ind1++, 0x400000080000004E, 0, 16, 1, 16, 16, He_m_k01M_CS, 80),
+                new Cancel(ind1++, 0x4000000800000000, 0, 11, 1, 15, 15, GetMoveID(MOVESET,"He_m_k00DG\0", 1600), 80),
+                new Cancel(ind1++, 0x8000, 0, 0, 49, 32767, 49, He_sKAM00_, 336),
 		        // For Spinning Demon (kick 2)
-		        new Cancel(ind1++, 0x400000080000004E, 0, 16, 1, 24, 24, (short)He_m_k02M_CS, 80),
-                new Cancel(ind1++, 0x4000000100000000, 0, 11, 1, 16, 16, (short)GetMoveID(MOVESET,"He_m_k01MAG\0", 1600), 80),
-                new Cancel(ind1++, 0x4000000800000020, 0, 11, 1, 23, 23, (short)GetMoveID(MOVESET,"He_m_k01MDG\0", 1600), 80),
-                new Cancel(ind1++, 0x8000, 0, 0, 59, 32767, 59, (short)He_sKAM00_, 336),
+		        new Cancel(ind1++, 0x400000080000004E, 0, 16, 1, 24, 24, He_m_k02M_CS, 80),
+                new Cancel(ind1++, 0x4000000100000000, 0, 11, 1, 16, 16, GetMoveID(MOVESET,"He_m_k01MAG\0", 1600), 80),
+                new Cancel(ind1++, 0x4000000800000020, 0, 11, 1, 23, 23, GetMoveID(MOVESET,"He_m_k01MDG\0", 1600), 80),
+                new Cancel(ind1++, 0x8000, 0, 0, 59, 32767, 59, He_sKAM00_, 336),
 		        // D+1 to Ultimate RA
                 RA_Cancel2,
                 // D+2 to Ultimate RA
@@ -930,21 +1038,87 @@ namespace TekkenTrainer
             };
             if (!AssignMoveAttributeIndex(MOVESET, reqs, (int)OFFSETS.cancel_list)) return false;
 
-            if (!HeihachiAura(MOVESET, GetMoveAttributeAddress(MOVESET, (short)He_sKAM00_+1, (int)Offsets.ext_prop_addr))) return false;
-
+            if (!HeihachiAura(GetMoveAttributeAddress(MOVESET, He_sKAM00_ + 1, 0x80))) return false;
+            stopwatch.Stop();
+            Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
             return true; // Successfully Written
         }
 
         private bool SHACancelRequirements(ulong MOVESET) // For Shin Akuma
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong reqHeader = mem.ReadMemory<ulong>(MOVESET + 0x160);
+            //ulong cancelHeader = mem.ReadMemory<ulong>(MOVESET + 0x1B0);
+            int reqSize = mem.ReadMemory<int>(MOVESET + 0x168);
+            // Editing requirements
+            int intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, reqSize - 350);
+            if (intro == -1) return true; // that means already written
+            int outro = intro == -1 ? -1 : intro + 13;
+            List<Node> introreqs = new List<Node>
+            {
+                new Node(intro, 3),
+                new Node(outro, 3),
+            };
+            if (!RemoveRequirements(MOVESET, introreqs)) return false;
+
+            int charID = GetCharID(MOVESET);
+            int Mx_sKAM00_ = mem.ReadMemory<short>(MOVESET + 0x2A);
+            // Finding & editing/removing parry req (1707)
+            ulong addr = GetMoveAttributeAddress(MOVESET, Mx_sKAM00_, (int)Offsets.cancel_addr) + (40 * 10); // 10th cancel
+            ulong raddr = mem.ReadMemory<ulong>(addr + 8);
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr +48); // (1713)
+            RemoveRequirement(raddr, 3, charID);
+            int Mx_Blocking_7CS = mem.ReadMemory<short>(addr + 36);
+
+            // Finding & editing/removing parry req (5440)
+            addr = GetMoveAttributeAddress(MOVESET, Mx_Blocking_7CS, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 1)); // 2nd cancel
+            RemoveRequirement(raddr, 0, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 2)); // 3rd cancel
+            RemoveRequirement(raddr, 0, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 4)); // 5th cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 5)); // 6th cancel
+            RemoveRequirement(raddr, 3, charID);
+
+            // Finding & editing/removing focus attack req (4262)
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Mx_saving\0", 1800), (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 5)); // 6th cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 6)); // 7th cancel
+            RemoveRequirement(raddr, 3, charID);
+
+            // Finding & editing/removing triple shakunetsu req (4547)
+            int Ry_ShadohB = GetMoveID(MOVESET, "Ry_ShadohB\0", 1830);
+            addr = GetMoveAttributeAddress(MOVESET, Ry_ShadohB, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8); // 1st cancel
+            RemoveRequirement(raddr, 3, charID);
+
+            // Finding & editing/removing triple shakunetsu req (4564)
+            addr = GetMoveAttributeAddress(MOVESET, Ry_ShadohB+1, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8); // 1st cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 1)); // 2nd cancel
+            RemoveRequirement(raddr, 3, charID);
+            raddr = mem.ReadMemory<ulong>(addr + 8 + (40 * 2)); // 3rd cancel
+            RemoveRequirement(raddr, 3, charID);
+
+            // Finding & editing/removing triple ultimate rage art req (894)
+            int Mx_RageArtsL_n = GetMoveID(MOVESET, "Mx_RageArtsL_n\0", Ry_ShadohB+70);
+            addr = GetMoveAttributeAddress(MOVESET, Mx_RageArtsL_n, (int)Offsets.cancel_addr);
+            mem.WriteMemory<ulong>(addr + 8 + (40 * 2), reqHeader); // 3rd cancel
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Mx_RageArtsR_n\0", Mx_RageArtsL_n + 1), (int)Offsets.cancel_addr);
+            mem.WriteMemory<ulong>(addr + 8 + (40 * 2), reqHeader); // 3rd cancel
             // For removing requirements from cancels
-            if (!RemoveRequirements(MOVESET, FindInReqList("AKUMA"))) return false;
+            //if (!RemoveRequirements(MOVESET, FindInReqList("AKUMA"))) return false;
 
             // For extra move properties
             // {MoveID, Extraprop index value to be assigned to it}
             int Mx_asyura = GetMoveID(MOVESET, "Mx_asyura\0", 1900);
-            int Mx_asyura2 = GetMoveID(MOVESET, "Mx_asyura2\0", 1900);
-            int Mx_asyurab = GetMoveID(MOVESET, "Mx_asyurab\0", 1900);
+            int Mx_asyura2 = GetMoveID(MOVESET, "Mx_asyura2\0", Mx_asyura+1);
+            int Mx_asyurab = GetMoveID(MOVESET, "Mx_asyurab\0", Mx_asyura2+1);
             int[,] arr = new int[,]
             {
                 {Mx_asyura,  GetMoveAttributeIndex(MOVESET, Mx_asyura + 2,  (int)Offsets.ext_prop_addr)},
@@ -953,134 +1127,204 @@ namespace TekkenTrainer
             };
             if (!AssignMoveAttributeIndex(MOVESET, arr, (int)OFFSETS.extraprops)) return false;
 
-            Cancel[] arr1 = new Cancel[]
-            {
-                new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET,"Mx_RageArtsL_n\0", 1900), (int)Offsets.cancel_addr) + 2, 0, 0, -1, -1, -1, -1, -1, -1), // Cancel to Rage Art finish L -> Treasure RA
-                new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET,"Mx_RageArtsR_n\0", 1900), (int)Offsets.cancel_addr) + 2, 0, 0, -1, -1, -1, -1, -1, -1), // Cancel to Rage Art finish R -> Treasure RA
-            };
-
-            // Updating cancel lists
-            if (!Edit_Cancels(MOVESET, arr1, 0)) return false;
-
-            int Co_t_slk00 = GetMoveID(MOVESET, "Co_t_slk00\0", 1400);
-            int Mx_EXrecover_7CS = GetMoveID(MOVESET, "Mx_EXrecover_7CS\0", 1900);
+            int Co_t_slk00 = GetMoveID(MOVESET, "Co_t_slk00\0", Mx_sKAM00_);
+            int Mx_EXrecover_7CS = GetMoveID(MOVESET, "Mx_EXrecover_7CS\0", Mx_RageArtsL_n);
             if (Mx_EXrecover_7CS < 0 || Co_t_slk00 < 0) return false;
 
-            Cancel d34_Cancel1 = new Cancel(0x4000000C00000004, 0, 13, 1, 32767, 1, (short)Co_t_slk00, 80);
-            Cancel d34_Cancel2 = new Cancel(0x4000000C00000004, 0, 13, 1, 5, 1, (short)Co_t_slk00, 80);
+            Cancel d34_Cancel1 = new Cancel(0x4000000C00000004, 0, 13, 1, 32767, 1, Co_t_slk00, 80);
+            Cancel d34_Cancel2 = new Cancel(0x4000000C00000004, 0, 13, 1, 5, 1, Co_t_slk00, 80);
             FindCancelIndex(MOVESET, ref d34_Cancel1, 1, 490);
             FindCancelIndex(MOVESET, ref d34_Cancel2, 1, 690);
             d34_Cancel1.move_id = d34_Cancel2.move_id = (short)Mx_EXrecover_7CS;
 
             // Writing into group cancels
-            Cancel[] cancels = 
+            Cancel[] cancels =
             {
                 d34_Cancel1, d34_Cancel2
-                //{588, -1, -1, -1, -1, -1, -1, Mx_EXrecover_7CS, -1}, // 583+5 - for d+3+4 meter charge
-                //{768, -1, -1, -1, -1, -1, -1, Mx_EXrecover_7CS, -1}, // 763+5 - for d+3+4 meter charge
             };
             if (!Edit_Cancels(MOVESET, cancels, 1)) return false;
-
+            stopwatch.Stop();
+            Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
             return true;  // This means the moveset has been modified successfully
         }
 
         private bool JINCancelRequirements(ulong MOVESET)    // Asura Jin requirements
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong reqHeader = mem.ReadMemory<ulong>(MOVESET + 0x160);
+            int reqSize = mem.ReadMemory<int>(MOVESET + 0x168);
+            int Jz_sKAM00_ = mem.ReadMemory<short>(MOVESET + 0x2A);
             // Editing requirements
+            int intro = FindReqIdx(MOVESET, new int[] {563, 7, 225, 1, 634, 0, 569, 0, 881, 0}, reqSize-350);
+            if (intro == -1) return true; // already written
+            int outro = intro == -1 ? -1 : intro + 5;
+            List<Node> introreqs = new List<Node>
+            {
+                new Node(intro, 3),
+                new Node(outro, 3),
+            };
+            if (!RemoveRequirements(MOVESET, introreqs)) return false;
+
+            // Finding & adding req (-1) and (2279, 3)
+            int UEWHF = GetMoveID(MOVESET, "Jz_shoryu24_7CS\0", 1500); // UEWHF
+            ulong addr = GetMoveAttributeAddress(MOVESET, UEWHF, (int)Offsets.cancel_addr);
+            ulong raddr = mem.ReadMemory<ulong>(addr + 8);
+            int reqs = GetAttributeIndex(raddr, reqHeader, 8);
+            raddr = mem.ReadMemory<ulong>(addr + 48); // 2nd cancel
+            AddToReqList(reqs, -1, "JIN");
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), 3, "JIN");
+
+            // Finding & adding req (-2) & (-3)
+            int down12 = GetMoveID(MOVESET, "Jz_zansin00_7CS\0", UEWHF-10); // d+1+2
+            addr = GetMoveAttributeAddress(MOVESET, down12, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8); // 1st cancel
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), -2, "JIN");
+            raddr = mem.ReadMemory<ulong>(addr + 48); // 2nd cancel
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), -3, "JIN");
+
+            // Finding & adding req (-4) & (-5)
+            int back1 = GetMoveID(MOVESET, "Jz_hadohB00_7CS\0", down12); // b+1
+            addr = GetMoveAttributeAddress(MOVESET, back1, (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8); // 1st cancel
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), -4, "JIN");
+            raddr = mem.ReadMemory<ulong>(addr + 48); // 2nd cancel
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), -5, "JIN");
+
+            // Finding & adding req for sliding during UETU
+            addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Jz_dslpS_7CS\0", UEWHF+1), (int)Offsets.cancel_addr);
+            raddr = mem.ReadMemory<ulong>(addr + 8); // 1st cancel
+            AddToReqList(GetAttributeIndex(raddr, reqHeader, 8), 3, "JIN");
+
             if (!RemoveRequirements(MOVESET, FindInReqList("JIN"))) return false;
 
             int Co_Dummy_00 = GetMoveID(MOVESET, "Co_Dummy_00\0", 700);
             int Co_Dummy_00_cancel_idx = GetMoveAttributeIndex(MOVESET, Co_Dummy_00, (int)Offsets.cancel_addr);
-            if (Co_Dummy_00 < 0) return true;
-            // Writing into group cancels
-            //arr = new long[,]
-            //{
-            //    {1546, 838} // 1566 + 154
-            //};
-            //if (!EditGroupCancels(MOVESET, arr, arr.GetLength(0)))
-            //    return;
+            
+            if (Co_Dummy_00 < 0 || Jz_sKAM00_  < 0) return true;
+            // Getting to cancel holding address to group cancels
+            addr = GetMoveAttributeAddress(MOVESET, Jz_sKAM00_, (int)Offsets.cancel_addr);
+            int command = mem.ReadMemory<int>(addr);
+            while(command != 0x800b)
+            {
+                addr += 40;
+                command = mem.ReadMemory<int>(addr);
+            }
+            int starting_frame = mem.ReadMemory<int>(addr + 0x20);
+            int moveID = mem.ReadMemory<short>(addr + 0x24);
+            Cancel[] cancels = new Cancel[]
+            {
+                new Cancel(starting_frame+moveID-4, 0x4000000900000010, 0, -1, -1, -1, -1, Co_Dummy_00+1, 64),
+                new Cancel(starting_frame+moveID-3, 0x4000000700000000, 0, -1, -1, -1, -1, Co_Dummy_00, -1),
+                new Cancel(starting_frame+moveID-2, 0x4000000b00000000, 0, -1, -1, -1, -1, Co_Dummy_00, -1),
+                new Cancel(starting_frame+moveID-1, 0x400, 0, -1, -1, -1, -1, -1, -1),
+            };
 
-            int Jz_sKAM00_ = 32769;
-            int back1 = GetMoveID(MOVESET, "Jz_hadohB00_7CS\0", 1400); // b+1
-            int down12 = GetMoveID(MOVESET, "Jz_zansin00_7CS\0", 1400); // d+1+2
-            int standing4 = GetMoveID(MOVESET, "Jz_round_RKbackE\0", 1400); // standing 4 on hit
-            int whf_h = GetMoveID(MOVESET, "Jz_shoryu34f2ph\0", 1400); // WHF on hit
-            int UEWHF = GetMoveID(MOVESET, "Jz_shoryu24_7CS\0", 1400); // UEWHF
-            if (back1 < 0 || down12 < 0 || standing4 < 0 || whf_h < 0 || UEWHF < 0) return false; // Error checking
+            // Updating cancel lists
+            if (!Edit_Cancels(MOVESET, cancels, 1)) return false;
+
+            int idle = 32769;
+            int standing4 = GetMoveID(MOVESET, "Jz_round_RKbackE\0", Jz_sKAM00_); // standing 4 on hit
+            int WHF = GetMoveID(MOVESET, "Jz_shoryu34f2p\0", Jz_sKAM00_); // WHF
+            //int whf_h = GetMoveID(MOVESET, "Jz_shoryu34f2ph\0", WHF+1); // WHF on hit
+            //int UEWHF = GetMoveID(MOVESET, "Jz_shoryu24_7CS\0", Jz_sKAM00_); // UEWHF
+            int Jz_lklpzansin00 = GetMoveID(MOVESET, "Jz_lklpzansin00\0", UEWHF+10); // 3,1 ~ F
+            if (back1 < 0 || down12 < 0 || standing4 < 0 || WHF < 0 || UEWHF < 0 || Jz_lklpzansin00 < 0) return false; // Error checking
             // This array is for copying moves
             int[] moveIDs = new int[]
             {
-                back1, // For b+1 into d/f+1
-		        back1, // For b+1 into d/f+2
-		        back1, // For b+1 into d/f+4
-		        down12, // For d+1+2 into 1+2
-		        down12, // For d+1+2 into 3+4
-		        down12, // For d+1+2 into 2
-		        down12, // For d+1+2 into 4
-		        down12, // For d+1+2 into 3
+		        down12, // Copy of boss d+1+2
+                back1, // Copy of boss b+1
 		        standing4, // For Standing 4 into UEWHF
-		        whf_h  // For WHF > UEWHF
-	        };
+                Jz_lklpzansin00, // For 3,1~F cancel list
+                WHF+1  // For WHF > UEWHF
+            };
 
+            int Jz_zan_lrp = GetMoveID(MOVESET, "Jz_zan_lrp\0", down12);
+            int Jz_jmplk = GetMoveID(MOVESET, "Jz_jmplk\0", UEWHF + 150);
+            int Jz_zan_yokerp = GetMoveID(MOVESET, "Jz_zan_yokerp\0", UEWHF);
+            int Jz_2lrplk = GetMoveID(MOVESET, "Jz_2lrplk\0", UEWHF + 150);
+            int Jz_zan_srk00EX = GetMoveID(MOVESET, "Jz_zan_srk00EX\0", UEWHF);
             int ind1 = Co_Dummy_00_cancel_idx; // Cancel list index of Co_Dummy_00
-            int ind2 = GetMoveAttributeIndex(MOVESET, down12, (int)Offsets.cancel_addr) + 2;  // Cancel list index of d+1+2, idx 3
-            int ind3 = GetMoveAttributeIndex(MOVESET, back1, (int)Offsets.cancel_addr) + 2;  // Cancel list index of boss b+1, idx 3
-            int ind4 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_3lklk_zansin\0", 1400), (int)Offsets.cancel_addr); // Cancel list index of 1,3 / d/f+3,3 ZEN cancel, idx 1
+            int EWHF_cli = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_shoryu24\0", 1750), (int)Offsets.cancel_addr); // Cancel list index EWHF
+            int UEWHF_cli = GetMoveAttributeIndex(MOVESET, UEWHF, (int)Offsets.cancel_addr); // Cancel list index UEWHF
+            int WHF_cli = GetMoveAttributeIndex(MOVESET, WHF, (int)Offsets.cancel_addr); // Cancel list index WHF
+            int ind2 = GetMoveAttributeIndex(MOVESET, Jz_lklpzansin00-1, (int)Offsets.cancel_addr);  // Cancel list index of 3,1, idx 2
+            int ind4 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_3lklk_zansin\0", 1710), (int)Offsets.cancel_addr); // Cancel list index of 1,3 / d/f+3,3 ZEN cancel, idx 1
             int ind5 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_rasetuzansin\0", 1400), (int)Offsets.cancel_addr); // Cancel list index of b,f+2,3 ZEN cancel, idx 1
             int ind6 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_oni8_zansin\0", 1400), (int)Offsets.cancel_addr); // Cancel list index of ws+1,2 ZEN cancel, idx 1
             int ind7 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_4lk_zansin\0", 1400), (int)Offsets.cancel_addr); // Cancel list index of b+3 ZEN cancel, idx 1
             int ind8 = GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_6rk_zansin2\0", 1400), (int)Offsets.cancel_addr); // Cancel list index of f+4 ZEN cancel, idx 1
-            if (ind4 < 0 || ind5 < 0 || ind6 < 0 || ind7 < 0 || ind8 < 0) return false;
-
+            //if (ind4 < 0 || ind5 < 0 || ind6 < 0 || ind7 < 0 || ind8 < 0) return false;
+            int slide_forward = FindInReqList("JIN", -2);
+            int slide_forward_stop = FindInReqList("JIN", -3);
+            int slide_backward = FindInReqList("JIN", -4);
+            int slide_backward_stop = FindInReqList("JIN", -5);
             // {index, command, req_idx, ext_idx, w_start, w_end, starting_frame, move, option}
             Cancel[] arr1 = new Cancel[]
             {
-                // For b+1 into d/f+1
-		        new Cancel(ind1++, 0, 0, 20, 30, 30, 30, (short)GetMoveID(MOVESET, "Jz_dslpS_7CS\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 55, 32767, 55, (short)Jz_sKAM00_, 336),
-		        // For b+1 into d/f+2
-		        new Cancel(ind1++, 0, 0, 20, 30, 30, 30, (short)UEWHF, 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 55, 32767, 55, (short)Jz_sKAM00_, 336),
-		        // For b+1 into d/f+4
-		        new Cancel(ind1++, 0, 0, 20, 30, 30, 30, (short)GetMoveID(MOVESET, "Jz_m_k20_7CS\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 55, 32767, 55, (short)Jz_sKAM00_, 336),
-		        // For d+1+2 into 1+2
-		        new Cancel(ind1++, 0, 0, 13, 25, 25, 25, (short)GetMoveID(MOVESET, "Jz_zan_lrp\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, (short)Jz_sKAM00_, 336),
-		        // For d+1+2 into 3+4
-		        new Cancel(ind1++, 0, 0, 13, 25, 25, 25, (short)GetMoveID(MOVESET, "Jz_jmplk\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, (short)Jz_sKAM00_, 336),
-		        // For d+1+2 into 2
-		        new Cancel(ind1++, 0, 0, 13, 25, 25, 25, (short)GetMoveID(MOVESET, "Jz_zan_yokerp\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, (short)Jz_sKAM00_, 336),
-		        // For d+1+2 into 4
-		        new Cancel(ind1++, 0, 0, 13, 25, 25, 25, (short)GetMoveID(MOVESET, "Jz_zan_srk00EX\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, (short)Jz_sKAM00_, 336),
-		        // For d+1+2 into 3
-		        new Cancel(ind1++, 0, 0, 13, 25, 25, 25, (short)GetMoveID(MOVESET, "Jz_2lrplk\0", 1400), 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, (short)Jz_sKAM00_, 336),
-		        // For standing 4 into UEWHF
-		        new Cancel(ind1++, 0, 0, 15, 40, 40, 40, (short)UEWHF, 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 40, 32767, 40, (short)Jz_sKAM00_, 336),
-		        // For WHF into UEWHF
-		        new Cancel(ind1++, 0, 0, 15, 36, 36, 36, (short)UEWHF, 65),
-                new Cancel(ind1++, 0x8000, 0, 0, 38, 32767, 38, (short)Jz_sKAM00_, 336),
-		        // d+1+2 (boss version) cancel list
-		        new Cancel(ind2++, 0x4000000300000000, 0, 10, 16, 24, 24, (short)(Co_Dummy_00 + 3), 80),
-                new Cancel(ind2++, 0x4000000C00000000, 0, 10, 16, 24, 24, (short)(Co_Dummy_00 + 4), 80),
-                new Cancel(ind2++, 0x4000000200000000, 0, 10, 16, 24, 24, (short)(Co_Dummy_00 + 5), 80),
-                new Cancel(ind2++, 0x4000000800000000, 0, 10, 16, 24, 24, (short)(Co_Dummy_00 + 6), 80),
-                new Cancel(ind2++, 0x4000000400000000, 0, 10, 16, 24, 24, (short)(Co_Dummy_00 + 7), 80),
-		        // b+1 Cancel list
-		        new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_hadohB00\0", 1400), (int)Offsets.cancel_addr) + 1, 0, 0, 10, 1, 1, 1, (short)GetMoveID(MOVESET,"Jz_hadohB00_7CS\0", 1400), 65),
-		        // b+1 (boss version) cancel list
-		        new Cancel(ind3++, 0x4000000100000000, 0, 10, 16, 29, 29, (short)(Co_Dummy_00 + 0), 80),
-                new Cancel(ind3++, 0x4000000200000000, 0, 10, 16, 29, 29, (short)(Co_Dummy_00 + 1), 80),
-                new Cancel(ind3++, 0x4000000800000000, 0, 10, 16, 29, 29, (short)(Co_Dummy_00 + 2), 80),
-		        // For UEWHF into UEWHF
-		        new Cancel(GetMoveAttributeIndex(MOVESET, UEWHF, (int)Offsets.cancel_addr) + 5, 0x4000000200000040, 0, -1, 24, -1, -1, -1, 80),
+                // For d+1+2 boss copy (841) cancel list
+                new Cancel(ind1++, 0, slide_forward, 22, 1, 15, 1, idle, 257),
+                new Cancel(ind1++, 0, slide_forward_stop, 22, 16, 32767, 16, idle, 257),
+                new Cancel(ind1++, 0x4000000300000000, reqs + 0, 22, 1, 40, 1, idle, 272), // 1+2
+                new Cancel(ind1++, 0x4000000c00000000, reqs + 2, 22, 1, 40, 1, idle, 272), // 3+4
+                new Cancel(ind1++, 0x4004000200000000, reqs + 4, 22, 1, 40, 1, idle, 272), // 2 while 1 is not held
+                new Cancel(ind1++, 0x4020000400000000, reqs + 6, 22, 1, 40, 1, idle, 272), // 3 while 4 is not held
+                new Cancel(ind1++, 0x4010000800000000, reqs + 8, 22, 1, 40, 1, idle, 272), // 4 while 3 is not held
+                new Cancel(ind1++, 0, reqs + 10, 13, 25, 40, 25, Jz_zan_lrp, 65),
+                new Cancel(ind1++, 0, reqs + 13, 13, 25, 40, 25, Jz_jmplk, 65),
+                new Cancel(ind1++, 0, reqs + 16, 13, 25, 40, 25, Jz_zan_yokerp, 65),
+                new Cancel(ind1++, 0, reqs + 19, 13, 25, 40, 25, Jz_2lrplk, 65),
+                new Cancel(ind1++, 0, reqs + 22, 13, 25, 40, 25, Jz_zan_srk00EX, 65),
+                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, idle, 336),
+                // For b+1 boss copy (842) cancel list
+                new Cancel(ind1++, 0, slide_backward, 22, 1, 15, 1, idle, 257),
+                new Cancel(ind1++, 0, slide_backward_stop, 22, 16, 32767, 16, idle, 257),
+                new Cancel(ind1++, 0, slide_backward_stop, 22, 16, 32767, 16, idle, 257),
+                new Cancel(ind1++, 0x4000000100000000, reqs + 0, 22, 1, 29, 1, idle, 272), // 1
+                new Cancel(ind1++, 0x4000000200000000, reqs + 2, 22, 1, 29, 1, idle, 272), // 2
+                new Cancel(ind1++, 0x4000000800000000, reqs + 4, 22, 1, 29, 1, idle, 272), // 4
+                new Cancel(ind1++, 0, reqs + 10, 20, 30, 30, 30, back1+3, 65),  // UETU
+                new Cancel(ind1++, 0, reqs + 13, 20, 30, 30, 30, back1+2, 65),  // UEWHF
+                new Cancel(ind1++, 0, reqs + 16, 20, 30, 30, 30, back1+1, 65),  // ULLRK
+                new Cancel(ind1++, 0x8000, 0, 0, 55, 32767, 55, idle, 336),
+                // For standing 4 copy (843) into UEWHF
+		        new Cancel(ind1++, 0, 0, 15, 40, 40, 40, UEWHF, 65),
+                new Cancel(ind1++, 0x8000, 0, 0, 40, 32767, 40, idle, 336),
+                // For 3,1 ~ F ZEN copy (844) cancel list
+                new Cancel(ind1++, 0x4000000100000008, 0, 15, 1, 20, 20, GetMoveID(MOVESET, "Jz_dslpS\0", 1700), 80),
+                new Cancel(ind1++, 0x4000000200000008, 0, 15, 1, 20, 20, GetMoveID(MOVESET, "Jz_shoryu24\0", 1770), 80),
+                new Cancel(ind1++, 0x4000000800000008, 0, 15, 1, 20, 20, GetMoveID(MOVESET, "Jz_m_k20\0", 1770), 80),
+                new Cancel(ind1++, 0x8, 0, 13, 20, 40, 20, GetMoveID(MOVESET, "Jz_shoryu01\0", 1720), 80),
+                new Cancel(ind1++, 0x4000000300000000, 0, 13, 1, 40, 15, Jz_zan_lrp, 80),
+                new Cancel(ind1++, 0x4000000c00000000, 0, 13, 1, 40, 15, Jz_jmplk, 80),
+                new Cancel(ind1++, 0x4000000100000000, 0, 13, 1, 40, 15, GetMoveID(MOVESET, "Jz_zan_dslp\0", Jz_zan_lrp), 80),
+                new Cancel(ind1++, 0x4000000200000000, 0, 13, 1, 40, 15, Jz_2lrplk, 208),
+                new Cancel(ind1++, 0x4000000400000000, 0, 13, 1, 40, 15, Jz_zan_yokerp, 80),
+                new Cancel(ind1++, 0x4000000800000000, 0, 13, 1, 40, 15, Jz_zan_srk00EX, 80),
+                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, idle, 336),
+                // For WHF_on_hit Copy (845) cancel list
+                new Cancel(ind1++, 0, 0, 15, 36, 36, 36, UEWHF, 65),
+                new Cancel(ind1++, 0x8000, 0, 0, 45, 32767, 45, idle, 336),
+                // For UEWHF (1585) cancel
+                new Cancel(UEWHF_cli, 0x400, -1, -1, -1, -1, -1, -1, 272),
+                new Cancel(UEWHF_cli+3, 0x4000000200000040, reqs, 22, -1, 32, -1, -1, 272),
+                new Cancel(UEWHF_cli+4, 0x400, -1, -1, -1, -1, -1, -1, 272),
+                new Cancel(UEWHF_cli+5, 0, reqs+10, -1, -1, -1, -1, -1, -1),
+                // For 3,1 (1616) cancel
+                new Cancel(ind2+1, 0x40, -1, -1, -1, -1, -1, Co_Dummy_00+3, -1),
+                // For WHF (1834) into f+2 cancel
+                new Cancel(WHF_cli+1, 0x4000000200000040, reqs, 22, -1, 32, -1, -1, 272),
+                new Cancel(WHF_cli+2, 0x400, -1, -1, -1, -1, -1, -1, 272),
+                // For WHF_ON_HIT (1835) into f+2 cancel
+                new Cancel(GetMoveAttributeIndex(MOVESET, WHF+1, (int)Offsets.cancel_addr), 0x4000000200000040, 0, 10, 1, 35, 35, Co_Dummy_00 + 4, 80),
+                //new Cancel(GetMoveAttributeIndex(MOVESET, WHF+1, (int)Offsets.cancel_addr), 0, reqs+10, -1, -1, -1, -1, -1, -1),
+                // For EWHF (1837) into f+2 cancel
+                new Cancel(EWHF_cli+3, 0x4000000200000040, reqs, 22, 1, 36, 1, idle, 272),
+                new Cancel(EWHF_cli+4, 0x400, reqs, 22, 1, 32, 1, idle, 272),
+                new Cancel(EWHF_cli+5, 0, reqs+10, -1, -1, -1, -1, -1, -1),
 		        // Standing 4 cancel list
-		        new Cancel(GetMoveAttributeIndex(MOVESET, standing4, (int)Offsets.cancel_addr), 0x4000000200000040, 0, 10, 1, 39, 39, (short)(Co_Dummy_00 + 8), 80),
+		        new Cancel(GetMoveAttributeIndex(MOVESET, standing4, (int)Offsets.cancel_addr), 0x4000000200000040, 0, 10, 1, 39, 39, Co_Dummy_00 + 2, 80),
 		        // For d/f+3,3 / 1,3 cancel list
 		        new Cancel(ind4++, 0x4000000100000008, 0, -1, 1, -1, -1, -1, 80),
                 new Cancel(ind4++, 0x4000000200000008, 0, -1, 1, -1, -1, -1, 80),
@@ -1101,10 +1345,6 @@ namespace TekkenTrainer
 		        new Cancel(ind8++, 0x4000000100000008, 0, -1, 1, -1, -1, -1, 80),
                 new Cancel(ind8++, 0x4000000200000008, 0, -1, 1, -1, -1, -1, 80),
                 new Cancel(ind8++, 0x4000000800000008, 0, -1, 1, -1, -1, -1, 80),
-		        // For WHF into Dummy Copy
-		        new Cancel(GetMoveAttributeIndex(MOVESET, whf_h, (int)Offsets.cancel_addr), 0x4000000200000040, 0, 10, 1, 35, 35, (short)(Co_Dummy_00 + 9), 80),
-		        // For EWHF into UEWHF
-		        new Cancel(GetMoveAttributeIndex(MOVESET, GetMoveID(MOVESET, "Jz_shoryu24\0", 1400), (int)Offsets.cancel_addr) + 5, 0x4000000200000040, 0, -1, 1, -1, -1, -1, 80)
             };
             // Updating cancel lists
             if (!Edit_Cancels(MOVESET, arr1, 0)) return false;
@@ -1117,28 +1357,64 @@ namespace TekkenTrainer
             int[,] arr = new int[,]
             {
                 {ind1++, ind2 + 0}, // {Co_Dummy_00 (841), 4210}
-		        {ind1++, ind2 + 2}, // {Co_Dymmy_02 (842), 4212}
-		        {ind1++, ind2 + 4}, // {Co_Dymmy_03 (843), 4214}
-		        {ind1++, ind2 + 6}, // {Co_Dymmy_05 (844), 4216}
-		        {ind1++, ind2 + 8}, // {Co_Dymmy_06 (845), 4218}
-		        {ind1++, ind2 +10}, // {Co_Dymmy_07 (846), 4219}
-		        {ind1++, ind2 +12}, // {Co_Dymmy_08 (847), 4220}
-		        {ind1++, ind2 +14}, // {Co_Dymmy_09 (848), 4222}
-		        {ind1++, ind2 +16}, // {Co_Dymmy_10 (849), 4224}
-		        {ind1++, ind2 +18}  // {Co_Dymmy_11 (850), 4226}
+		        {ind1++, ind2 +13}, // {Co_Dymmy_02 (842), 4223}
+		        {ind1++, ind2 +23}, // {Co_Dymmy_03 (843), 4233}
+		        {ind1++, ind2 +25}, // {Co_Dymmy_05 (844), 4235}
+		        {ind1++, ind2 +36}, // {Co_Dymmy_05 (845), 4246}
             };
             if (!AssignMoveAttributeIndex(MOVESET, arr, (int)OFFSETS.cancel_list)) return false;
-
+            stopwatch.Stop();
+            Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
             return true; // Memory has been successfully modified
         }
 
         private bool BS7CancelRequirements(ulong MOVESET) // For Devil Kazumi
         {
-            // For removing requirements from cancels
-            // {RequirementIndex, how many requirements to zero}
-            List<Node> arr = FindInReqList("KAZUMI");
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            ulong reqHeader = mem.ReadMemory<ulong>(MOVESET + 0x160);
+            int reqSize = mem.ReadMemory<int>(MOVESET + 0x168);
+            int intro = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 569, 0, 881, 0 }, reqSize - 700);
+            int outro = intro == -1 ? -1 : intro + 5;
+            //int jugglescape = FindReqIdx(MOVESET, new int[] { 563, 7, 225, 1, 634, 0, 138, 1, 545, 1, 881, 0 }, 10);
+            ulong addr = GetMoveAttributeAddress(MOVESET, GetMoveID(MOVESET, "Ka_lplprp\0", 1500), (int)Offsets.cancel_addr);
+            int reqs = GetAttributeIndex(mem.ReadMemory<ulong>(addr + 8), reqHeader, 8);
+
+            List<Node> arr = new List<Node>
+            {
+                //new Node(jugglescape, 3),
+                new Node(reqs, 3),
+                new Node(intro, 3),
+                new Node(outro, 3),
+            };
             if (!RemoveRequirements(MOVESET, arr)) return false;
 
+            // Searching for cancel list of juggle escape cancel
+            addr = GetMoveAttributeAddress(MOVESET, 1, (int)Offsets.cancel_addr);
+            while (mem.ReadMemory<short>(addr + 36) != 2)
+            {
+                addr += 40;
+            }
+            // Editing juggle escape cancels
+            mem.WriteMemory<ulong>(addr, 0x2000000F00000380);
+            mem.WriteMemory<ulong>(addr + 8, reqHeader);
+            mem.WriteMemory<int>(addr + 28, 8);
+            mem.WriteMemory<short>(addr + 38, 64);
+
+            addr = GetMoveAttributeAddress(MOVESET, 2, (int)Offsets.cancel_addr);
+            mem.WriteMemory<ulong>(addr, 0x2000000300000380);
+            mem.WriteMemory<ulong>(addr + 8, reqHeader);
+            mem.WriteMemory<ulong>(addr + 8, reqHeader);
+            mem.WriteMemory<short>(addr + 28, 30);
+            mem.WriteMemory<short>(addr + 38, 64);
+            addr += 40; // 2nd cancel
+            mem.WriteMemory<ulong>(addr, 0x2000000C00000380);
+            mem.WriteMemory<ulong>(addr + 8, reqHeader);
+            mem.WriteMemory<short>(addr + 28, 30);
+            mem.WriteMemory<short>(addr + 38, 64);
+
+            stopwatch.Stop();
+            Debug.WriteLine("Elapsed Time is {0} ms", stopwatch.ElapsedMilliseconds);
             return true;  // This means the moveset has been modified successfully
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1206,7 +1482,7 @@ namespace TekkenTrainer
         private void LoadCharacter(int side, int ID)
         {
             if (side < 0 || side > 1) return;
-            else if (ID < 0 || ID > 56) return;
+            if (ID < 0 || ID > 56) return;
             mem.WriteMemory<int>(visuals + ((ulong)side * 0x4) + 0x1C, ID);
             //mem.WriteMemory<int>(p1profileStruct + 0x10, ID);
         }
@@ -1273,6 +1549,73 @@ namespace TekkenTrainer
             ulong attr_addr = mem.ReadMemory<ulong>(addr + (ulong)offset);
             return attr_addr;
         }
+        bool RemoveRequirement(ulong addr, int value, int charID)
+        {
+            if (addr == 0) return false;
+            // Writing and replacing the code to make the HUD comeback and stop AI from reverting Devil Transformation
+            if (value == 0 && charID == 9)
+            {
+                if (!mem.WriteMemory<int>(addr, 563)) return false;
+                if (!mem.WriteMemory<int>(addr + 16, 0x829D)) return false;
+                if (!mem.WriteMemory<int>(addr + 20, 1)) return false;
+            }
+            // Cancel that goes from d/f+2 into f+1+2
+            else if (value == -1 && charID == 9)
+            {
+                if (!mem.WriteMemory<int>(addr, 361)) return false;
+                if (!mem.WriteMemory<int>(addr + 4, 5)) return false;
+                if (!mem.WriteMemory<int>(addr + 12, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 16, 33005)) return false;
+                if (!mem.WriteMemory<int>(addr + 20, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 24, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 28, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 40, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 48, 0)) return false;
+                value = 0;
+            }
+            // Handling the requirements to allow Akuma's parry
+            else if (value == 0 && charID == 32)
+            {
+                if (!mem.WriteMemory<int>(addr + 32, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 36, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 64, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 68, 0)) return false;
+                value = 3;
+            }
+            // Cancel that goes from f+1+2 into f+2
+            else if (value == -2 && charID == 9)
+            {
+                if (!mem.WriteMemory<int>(addr, 33005)) return false; // 1
+                if (!mem.WriteMemory<int>(addr+4, 5)) return false;
+                if (!mem.WriteMemory<int>(addr+8, 881)) return false; // 2
+                if (!mem.WriteMemory<int>(addr+12, 0)) return false;
+                if (!mem.WriteMemory<int>(addr+16, 614)) return false; // 3
+                if (!mem.WriteMemory<int>(addr+20, 0)) return false;
+                if (!mem.WriteMemory<int>(addr+24, 33005)) return false; // 4
+                if (!mem.WriteMemory<int>(addr+28, 6)) return false;
+                if (!mem.WriteMemory<int>(addr+32, 881)) return false; // 5
+                if (!mem.WriteMemory<int>(addr+36, 0)) return false;
+                if (!mem.WriteMemory<int>(addr+40, 361)) return false; // 6
+                if (!mem.WriteMemory<int>(addr+44, 5)) return false;
+                if (!mem.WriteMemory<int>(addr+48, 33005)) return false; // 7
+                if (!mem.WriteMemory<int>(addr+52, 0)) return false;
+                if (!mem.WriteMemory<int>(addr+56, 881)) return false; // 8
+                if (!mem.WriteMemory<int>(addr+60, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 64, 361)) return false; // 9
+                if (!mem.WriteMemory<int>(addr + 68, 6)) return false;
+                if (!mem.WriteMemory<int>(addr + 72, 33005)) return false; // 10
+                if (!mem.WriteMemory<int>(addr + 76, 0)) return false;
+                if (!mem.WriteMemory<int>(addr + 80, 881)) return false; // 11
+                if (!mem.WriteMemory<int>(addr + 84, 0)) return false;
+            }
+            ulong n_addr;
+            for (int j = 0; j < value; j++)
+            {
+                n_addr = addr + (ulong)(8 * j);
+                if (!mem.WriteMemory<int>(n_addr, 0)) return false;
+            }
+            return true;
+        }
         bool RemoveRequirements(ulong moveset, List<Node> arr)
         {
             if (arr == null) return true;
@@ -1283,22 +1626,69 @@ namespace TekkenTrainer
             // Removing requirements from the given array
             for (int i = 0; i < rows; i++)
             {
+                if (arr[i].index == -1) continue;
                 addr = requirements_addr + (8 * (ulong)arr[i].index);
-                // Writing and replacing the code to make the HUD comeback and stop AI from reverting Devil Transformation
-                if (arr[i].value == 0 && GetCharID(moveset) == 9)
+                // Setting Cancels for Jin
+                if (arr[i].value == -1 && GetCharID(moveset) == 6)
                 {
-                    if (!mem.WriteMemory<int>(addr, 563)) return false;
-                    if (!mem.WriteMemory<int>(addr + 16, 0x829D)) return false;
-                    if (!mem.WriteMemory<int>(addr + 20, 1)) return false;
+                    if (!mem.WriteMemory<int>(addr, 0x80ed)) return false;       // 1
+                    if (!mem.WriteMemory<int>(addr + 4, 771)) return false;
+                    if (!mem.WriteMemory<int>(addr + 8, 881)) return false;      // 2
+                    if (!mem.WriteMemory<int>(addr + 12, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 16, 0x80ed)) return false;  // 3
+                    if (!mem.WriteMemory<int>(addr + 20, 772)) return false;
+                    if (!mem.WriteMemory<int>(addr + 24, 881)) return false;     // 4
+                    if (!mem.WriteMemory<int>(addr + 28, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 32, 0x80ed)) return false;  // 5
+                    if (!mem.WriteMemory<int>(addr + 36, 773)) return false;
+                    if (!mem.WriteMemory<int>(addr + 40, 881)) return false;     // 6
+                    if (!mem.WriteMemory<int>(addr + 44, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 48, 0x80ed)) return false;  // 7
+                    if (!mem.WriteMemory<int>(addr + 52, 774)) return false;
+                    if (!mem.WriteMemory<int>(addr + 56, 881)) return false;     // 8
+                    if (!mem.WriteMemory<int>(addr + 60, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 64, 0x80ed)) return false;  // 9
+                    if (!mem.WriteMemory<int>(addr + 68, 775)) return false;
+                    if (!mem.WriteMemory<int>(addr + 72, 881)) return false;     // 10
+                    if (!mem.WriteMemory<int>(addr + 76, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 80, 361)) return false;     // 11
+                    if (!mem.WriteMemory<int>(addr + 84, 771)) return false;
+                    if (!mem.WriteMemory<int>(addr + 88, 0x80ed)) return false;  // 12
+                    if (!mem.WriteMemory<int>(addr + 92, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr + 96, 881)) return false;     // 13
+                    if (!mem.WriteMemory<int>(addr +100, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +104, 361)) return false;     // 14
+                    if (!mem.WriteMemory<int>(addr +108, 772)) return false;
+                    if (!mem.WriteMemory<int>(addr +112, 0x80ed)) return false;  // 15
+                    if (!mem.WriteMemory<int>(addr +116, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +120, 881)) return false;     // 16
+                    if (!mem.WriteMemory<int>(addr +124, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +128, 361)) return false;     // 17
+                    if (!mem.WriteMemory<int>(addr +132, 773)) return false;
+                    if (!mem.WriteMemory<int>(addr +136, 0x80ed)) return false;  // 18
+                    if (!mem.WriteMemory<int>(addr +140, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +144, 881)) return false;     // 19
+                    if (!mem.WriteMemory<int>(addr +148, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +152, 361)) return false;     // 20
+                    if (!mem.WriteMemory<int>(addr +156, 774)) return false;
+                    if (!mem.WriteMemory<int>(addr +160, 0x80ed)) return false;  // 21
+                    if (!mem.WriteMemory<int>(addr +164, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +168, 881)) return false;     // 22
+                    if (!mem.WriteMemory<int>(addr +172, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +176, 361)) return false;     // 23
+                    if (!mem.WriteMemory<int>(addr +180, 775)) return false;
+                    if (!mem.WriteMemory<int>(addr +184, 0x80ed)) return false;  // 24
+                    if (!mem.WriteMemory<int>(addr +188, 0)) return false;
+                    if (!mem.WriteMemory<int>(addr +192, 881)) return false;     // 25
+                    if (!mem.WriteMemory<int>(addr +196, 0)) return false;
                 }
-                // Handling the requirements to allow Akuma's parry
-                else if (arr[i].value == 0 && GetCharID(moveset) == 32)
+                else if ((arr[i].value >= -9 && arr[i].value <= -2) && GetCharID(moveset) == 6)
                 {
-                    if (!mem.WriteMemory<int>(addr + 32, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 36, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 64, 0)) return false;
-                    if (!mem.WriteMemory<int>(addr + 68, 0)) return false;
-                    arr[i].value = 3;
+                    for (int j = 0; j < 3; j++)
+                    {
+                        n_addr = addr + (ulong)(8 * j);
+                        if (!mem.WriteMemory<int>(n_addr, 0)) return false;
+                    }
                 }
                 for (int j = 0; j < arr[i].value; j++)
                 {
@@ -1323,7 +1713,7 @@ namespace TekkenTrainer
             int ind = -1;
             int value;
             rows = rows * 2 - pat_size;
-            for (int i = 0; i <= rows; i++)
+            for (int i = start; i <= rows; i++)
             {
                 int j;
                 // For current index i, check for pattern match
@@ -1468,7 +1858,7 @@ namespace TekkenTrainer
             return true;
         }
 
-        bool HeihachiAura(ulong moveset, ulong addr)
+        bool HeihachiAura(ulong addr)
         {
             if (addr == 0) return false;
             if (!mem.WriteMemory<int>(addr - 12, 1)) return false;
@@ -1555,7 +1945,7 @@ namespace TekkenTrainer
                 input = input.Trim(); // From beginning and end
                 input = String.Concat(input.Where(c => !Char.IsWhiteSpace(c))); // From middle
 
-                // Seperating Name and Visuals
+                // Seperating Name and Values
                 name = input.Substring(0, input.IndexOf('='));
                 input = input.Substring(input.IndexOf("=") + 1);
 
@@ -1653,36 +2043,7 @@ namespace TekkenTrainer
                     return;
                 }
             }
-
-            string[] Names = { "JIN", "HEIHACHI", "KAZUYA", "KAZUMI", "AKUMA" };
-            string path = "Requirements/";
-            try
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    requirements[i] = new Req_Item(Names[i]);
-                    text = File.ReadAllLines(path + Names[i] + ".txt");
-                    if (text.Length == 0)
-                    {
-                        return;
-                    }
-                    List<Node> list = new List<Node>();
-                    foreach (string t in text)
-                    {
-                        Parse(t, ref list);
-                    }
-                    requirements[i].ptr = list;
-                }
-            }
-            catch (Exception ex)
-            {
-                int result = ex.HResult;
-                if ((uint)result == 0x80070002 || (uint)result == 0x80070003)
-                {
-                    return;
-                }
-                else throw ex;
-            }
+            requirements[0] = new Req_Item("JIN", new List<Node>());
         }
 
         private ulong[] FindInList(string name)
@@ -1703,9 +2064,36 @@ namespace TekkenTrainer
             return null;
         }
 
+        private int FindInReqList(string name, int val)
+        {
+            foreach (Req_Item a in requirements)
+            {
+                if (a.name == name)
+                {
+                    foreach(Node node in a.ptr)
+                    {
+                        if (val == node.value) return node.index;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        private bool AddToReqList(int idx, int val, string name)
+        {
+            //int i = 0;
+            if (idx == -1) return false;
+            List<Node> list = FindInReqList(name);
+            foreach (Node a in list) // checking if item already exists
+            {
+                if (a.index == idx && a.value == val) return false;
+            }
+            list.Add(new Node(idx, val));
+            return true;
+        }
+
         private int FindIndexInList(string name, int v)
         {
-            if (v >= 0) return -1;
             foreach (Req_Item a in requirements)
             {
                 if (a.name == name)

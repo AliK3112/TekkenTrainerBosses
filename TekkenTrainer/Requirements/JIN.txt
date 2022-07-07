@@ -1,10 +1,11 @@
-1100, 3 # Move Name: Jz_sKAM00_, Group Cancel list: 1546, idx 141-143
-2230, 3 # Move Name: Jz_zansin00_7CS, Cancel list: 7164, idx 1
-2236, 3 # Move Name: Jz_zansin00_7CS, Cancel list: 7164, idx 2
-2252, 3 # Move Name: Jz_hadohB00_7CS, Cancel list: 7186, idx 1
-2258, 3 # Move Name: Jz_hadohB00_7CS, Cancel list: 7186, idx 2
-2279, 3 # Move Name: Jz_m_k20_7CS, Cancel list: 7192, idx 1
-2306, 3 # Move Name: Jz_shoryu24_7CS, Cancel list: 7198, idx 1
+#1093, -1 # Move Name: Jz_sKAM00_, Group Cancel list: 1546, idx 140
+#1100, -2 # Move Name: Jz_sKAM00_, Group Cancel list: 1546, idx 141-143
+2230, -2 # Move Name: Jz_zansin00_7CS, Cancel list: 7164, idx 1
+2236, -3 # Move Name: Jz_zansin00_7CS, Cancel list: 7164, idx 2
+2252, -4 # Move Name: Jz_hadohB00_7CS, Cancel list: 7186, idx 1
+2258, -5 # Move Name: Jz_hadohB00_7CS, Cancel list: 7186, idx 2
+2279, -6 # Move Name: Jz_m_k20_7CS, Cancel list: 7192, idx 1
+2306, -1 # Move Name: Jz_shoryu24_7CS, Cancel list: 7198, idx 1
 2342, 3 # Move Name: Jz_dslpS_7CS, Cancel list: 7208, idx 1
 3418, 3 # Move Name: Jz_Direct, Cancel list: 9136, idx 13
 3423, 3 # Move Name: Jz_Direct, Cancel list: 9136, idx 14
