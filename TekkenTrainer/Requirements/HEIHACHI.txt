@@ -1,9 +1,0 @@
-2730, 4 # Move Name: He_m_p01, Cancel list: 7995, idx 2
-3441, 3 # Move Name: He_t_srp02, Cancel list: 8085, idx 16
-3669, 3 # Move Name: He_shoryu_N, Cancel list: 8345, idx 12
-3674, 3 # Move Name: He_shoryu_N, Cancel list: 8345, idx 14
-3681, 3 # Move Name: He_shoryu_N, Cancel list: 8345, idx 15
-3688, 3 # Move Name: He_shoryu_N, Cancel list: 8345, idx 16
-3733, 3 # Move Name: He_shoryu_N, Hit condition list: 440, idx 3
-4719, 3 # Move Name: He_Direct, Cancel list: 10427, idx 29
-4724, 3 # Move Name: He_Direct, Cancel list: 10427, idx 30

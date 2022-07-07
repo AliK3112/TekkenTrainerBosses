@@ -1,4 +1,0 @@
-24, 3   # Move Name: sDw_AIR00_, Cancel list: 2, idx 6
-2043, 3 # Move Name: Ka_lplprp, Cancel list: 6846, idx 1
-2532, 3 # Move Name: Ka_Direct, Cancel list: 8234, idx 22
-2537, 3 # Move Name: Ka_Direct, Cancel list: 8234, idx 23
