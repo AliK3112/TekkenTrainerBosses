@@ -1,5 +1,6 @@
 ﻿using Memory.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -89,9 +90,10 @@ namespace Memory.Win64
             return result && bw != IntPtr.Zero;
         }
 
-        public bool WriteBytes(ulong MemoryAddress, byte[] array)
+        public bool WriteBytes(ulong MemoryAddress, byte[] array, int len = 0)
         {
-            int sz = array.Length;
+            int sz = len;
+            if (len == 0) sz = array.Length;
             bool result = WriteProcessMemory(process.Handle, MemoryAddress, array, sz, out IntPtr bw);
             return result && bw != IntPtr.Zero;
         }

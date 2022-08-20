@@ -209,6 +209,7 @@ namespace TekkenTrainer
         public static ulong motbinOffset;
         public static ulong p1structsize;
         public static ulong AllocatedMem;
+        public static ulong hudIconBytes;
 
         // Costume Related stuff
         static readonly string cs_kaz_final = "/Game/Demo/StoryMode/Character/Sets/CS_KAZ_final.CS_KAZ_final";
@@ -217,9 +218,11 @@ namespace TekkenTrainer
 
         static readonly List<File_Item> fileData = new List<File_Item>();
         static readonly Req_Item[] requirements = new Req_Item[1];
-        static bool IsRunning = false; // Variable to check if the game is running or not
-        static readonly byte[] ORG_INST = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
-        static byte[] BYTES_READ = { 0, 0, 0, 0, 0 }; // mov r13, [rsp+68]
+        static bool isRunning = false; // Variable to check if the game is running or not
+        static bool isInjected = false; // Variable to check if the code cave is created or not
+        static readonly List<byte> ORG_INST = new List<byte>();
+        //static readonly byte[] ORG_INST = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
+        static byte[] BYTES_READ;// = { 0, 0, 0, 0, 0 }; // mov r13, [rsp+68]
         public Form1()
         {
             InitializeComponent();
@@ -563,7 +566,7 @@ namespace TekkenTrainer
                         }
                         else throw ex;
                     }
-                    CreateCodeCave();
+                    //isInjected = CreateCodeCave();
                     AppendTextBox("Starting Script\r\n");
                     BossThreadLoop();
                     // Program will reach this portion ONLY if the game gets closed, so freeing memory
@@ -582,14 +585,14 @@ namespace TekkenTrainer
         {
             while (true)
             {
-                if (mem == null) IsRunning = false;
-                else IsRunning = mem.IsRunning();
+                if (mem == null) isRunning = false;
+                else isRunning = mem.IsRunning();
                 Thread.Sleep(100);
             }
         }
         private void Costumes(int side) // 0 = Left, 1 = Right
         {
-            if (!IsRunning) return;
+            if (!isRunning) return;
             if (!Checkbox_Get(6)) return;
             int charID = GetCharID(side);
             if (charID == 08 && GetCostumeID(side) == 14) // Preset 8
@@ -613,14 +616,14 @@ namespace TekkenTrainer
         }
         private void BossThreadLoop()
         {
-            if (!IsRunning) return;
+            if (!isRunning) return;
             int side;
             int gameMode;
             bool IsWritten1 = false;
             bool IsWritten2 = false;
             ulong MOVESET1;
             ulong MOVESET2;
-            while (IsRunning)
+            while (isRunning)
             {
                 Thread.Sleep(10);
                 gameMode = GameMode();
@@ -662,7 +665,7 @@ namespace TekkenTrainer
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private bool LoadBoss(ulong MOVESET, int side)
         {
-            if (!IsRunning) return false;
+            if (!isRunning) return false;
             bool Result = false;
             int charID = GetCharID(MOVESET);
             if (charID == 09)
@@ -1443,11 +1446,20 @@ namespace TekkenTrainer
             Checkboxes_checks(false);
             fileData.Clear();
             //requirements.Clear();
-            byte[] Org = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
-            if (mem != null && mem.GetProcess() != null)
+            if (isInjected)
             {
-                mem.WriteBytes(hud_icon_addr, Org);
-                mem.VirtualFreeMemory(AllocatedMem);
+                //ulong[] bytesFromFile = FindInList("hud_inst_bytes");
+                //foreach (var v in bytesFromFile)
+                //{
+                //    ORG_INST.Add(Convert.ToByte(v));
+                //}
+                //byte[] OGN = { 0x4C, 0x8B, 0x6C, 0x24, 0x68 }; // mov r13, [rsp+68]
+                if (mem != null && mem.GetProcess() != null)
+                {
+                    mem.WriteBytes(hud_icon_addr, ORG_INST.ToArray());
+                    mem.VirtualFreeMemory(AllocatedMem);
+                }
+                isInjected = !isInjected;
             }
             Application.Exit();
         }
@@ -2109,14 +2121,27 @@ namespace TekkenTrainer
 
         private bool CreateCodeCave()
         {
+            ulong[] bytesFromFile = FindInList("hud_inst_bytes");
             if (hud_icon_addr == 0)
             {
                 AppendTextBox("Code Cave Address Not Present\r\n");
                 return false;
             }
+            if (bytesFromFile == null)
+            {
+                AppendTextBox("Code Cave Bytes Not Present\r\n");
+                return false;
+            }
+            if (ORG_INST.Count == 0)
+            {
+                foreach (var v in bytesFromFile)
+                {
+                    ORG_INST.Add(Convert.ToByte(v));
+                }
+            }
             // Checking if given instruction address is the right one.
-            BYTES_READ = mem.ReadMemoryBytes(hud_icon_addr, 5);
-            for (int i = 0; i < 5; i++)
+            BYTES_READ = mem.ReadMemoryBytes(hud_icon_addr, ORG_INST.Count);
+            for (int i = 0; i < ORG_INST.Count; i++)
                 if (BYTES_READ[i] != ORG_INST[i])
                 {
                     AppendTextBox("Provided address for code cave is wrong, no code cave created\r\n");
@@ -2131,16 +2156,25 @@ namespace TekkenTrainer
             }
             /////////////////////////////////////////////////////
             // CREATING JMP INSTRUCTION FOR OUR CREATED CODE CAVE
-            const int Jmp_size = 5;
+            int Jmp_size = ORG_INST.Count;
             int Jmp_val = (int)(AllocatedMem - hud_icon_addr - 5);
             byte[] jmp_addr = BitConverter.GetBytes(Jmp_val);
-            byte[] jmp_inst = new byte[Jmp_size]
+            byte[] jmp_inst = ORG_INST.ToArray();
+            for (int i = 0; i < Jmp_size; i++)
             {
-                0xE9, jmp_addr[0], jmp_addr[1], jmp_addr[2], jmp_addr[3]
-            };
+                if (i == 0) jmp_inst[i] = 0xE9;
+                else if (i < 5)
+                {
+                    jmp_inst[i] = jmp_addr[i - 1];
+                }
+                else jmp_inst[i] = 0x90;
+            }
+            //{
+            //    0xE9, jmp_addr[0], jmp_addr[1], jmp_addr[2], jmp_addr[3], 0x90
+            //};
 
             // WRITING JUMP INSTRUCTION IN THE GAME'S MEMORY
-            if (!mem.WriteBytes(hud_icon_addr, jmp_inst))
+            if (!mem.WriteBytes(hud_icon_addr, jmp_inst, ORG_INST.Count))
             {
                 AppendTextBox("Failed to create code cave to load HUD icons\r\n");
                 mem.VirtualFreeMemory(AllocatedMem);
@@ -2183,9 +2217,9 @@ namespace TekkenTrainer
         private byte[] HUD_ICON_CODE_CAVE(ref int code_size)
         {
             byte[] D = BitConverter.GetBytes(AllocatedMem + 0x157);
-            const int size = 619; // 619
-            code_size = size;
-            byte[] ptr = new byte[size]
+            //const int size = 619; // 619
+            //byte[] ptr = new byte[size];
+            List<byte>cave = new List<byte>()
             {
 		        // newmem:
 		        0x49, 0x83, 0xfc, 0x4c, 									// cmp r12,'L'
@@ -2282,10 +2316,16 @@ namespace TekkenTrainer
 		        //	"HEI_Story_3.HUD_CH_ICON_L_HEI_Story_3"
 		        0x48, 0x45, 0x49, 0x5f, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x5f, 0x33, 0x2e, 0x48, 0x55, 0x44, 0x5f, 0x43, 0x48, 0x5f, 0x49, 0x43, 0x4f, 0x4e, 0x5f, 0x4c, 0x5f, 0x48, 0x45, 0x49, 0x5f, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x5f, 0x33, 0x00, 
 		        // code:
-		        0x4c, 0x8b, 0x6c, 0x24, 0x68, 								// mov r13,[rsp+68]
-		        0xe9, 0xea, 0xfd, 0x4c, 0x00                                // jmp [return_address]
+		        //0x4c, 0x8b, 0x6c, 0x24, 0x68, 								// mov r13,[rsp+68]
+		        //0xe9, 0xea, 0xfd, 0x4c, 0x00                                // jmp [return_address]
             };
-            return ptr;
+            foreach(var byt in ORG_INST)
+            {
+                cave.Add(Convert.ToByte(byt));
+            }
+            cave.Add(0xE9); cave.Add(0x90); cave.Add(0x90); cave.Add(0x90); cave.Add(0x90);
+            code_size = cave.Count;
+            return cave.ToArray();
         }
     }
 }

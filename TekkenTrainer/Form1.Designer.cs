@@ -485,7 +485,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(550, 600);
             this.Name = "Form1";
-            this.Text = "TEKKEN 7 Bosses Trainer for v4.28";
+            this.Text = "TEKKEN 7 Bosses Trainer [v5.00]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel_instructions.ResumeLayout(false);

@@ -1,0 +1,28 @@
+Update 1:
+-Program now reads all requirements from "requirements.txt" file. Done so in-order to make the tool self-sustaining. It would only require change in the text files to update the program to latest game versions.
+-Improved the code that searches for Move IDs on the basis of names.
+
+Update 2:
+-Added code to dynamically load HUD Icons. Program will now load icons for Kazuya and Heihachi that match their outfits. Do note that I haven't figured out how "Rematch" and "Simple Select" features load HUD icons so after those, the game will simply load normal HUD icons.
+-Made tiny adjustments to the code to increase optimization.
+
+Update 3:
+-Made the code even more self-sustaining. Also, Improved the code.
+-Added addresses and requirements for v3.30 upon getting so many requests. But Please buy the game and support developers!
+
+Update 4:
+-Trainer now works for online player matches. Both players must have the trainer running AND selected same costumes. Otherwise, game will desync. NOTE: DEVIL KAZUMI IS NOT GUARANTEED TO WORK IN PLAYER MATCHES.
+
+Update 5:
+-Added an "Update" button that fetches "addresses.txt" and all the requirement files from the source code github repository.
+
+Update 6:
+-Fixed Kazuya getting Rage after CD+1+4.
+-Removed the need for requirement text files for Jin & Kazumi. (Plan to remove other requirement files too, make the tool as much self sustaining as possible)
+-Completely re-worked Asura Jin. Also, b+1 and d+1+2 are no longer replaced by the boss versions. Both simple and boss versions of the moves now co-exist.
+
+Update 7:
+-Reworked Heihachi & Akuma.
+-Kazumi's juggle escape is now manual
+-Program no longer relies on "requirement" text files, it will automatically find those
+-Improved code speed & optimization
