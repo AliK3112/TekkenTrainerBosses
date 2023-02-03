@@ -97,7 +97,7 @@
             // 
             this.button_quit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_quit.Font = new System.Drawing.Font("Agency FB", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_quit.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_quit.ForeColor = System.Drawing.Color.Black;
             this.button_quit.Location = new System.Drawing.Point(187, 505);
             this.button_quit.Name = "button_quit";
@@ -121,7 +121,7 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Franklin Gothic Medium", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Tomato;
             this.label1.Location = new System.Drawing.Point(114, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
@@ -247,7 +247,7 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Font = new System.Drawing.Font("Agency FB", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.Black;
             this.button3.Location = new System.Drawing.Point(187, 437);
             this.button3.Name = "button3";
@@ -280,7 +280,7 @@
             // button_back
             // 
             this.button_back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_back.Font = new System.Drawing.Font("Agency FB", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_back.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_back.ForeColor = System.Drawing.Color.Black;
             this.button_back.Location = new System.Drawing.Point(29, 479);
             this.button_back.Name = "button_back";
@@ -411,7 +411,7 @@
             // 
             // button_update
             // 
-            this.button_update.Font = new System.Drawing.Font("Agency FB", 15.75F);
+            this.button_update.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
             this.button_update.ForeColor = System.Drawing.Color.Black;
             this.button_update.Location = new System.Drawing.Point(29, 479);
             this.button_update.Name = "button_update";
@@ -485,7 +485,8 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(550, 600);
             this.Name = "Form1";
-            this.Text = "TEKKEN 7 Bosses Trainer [v5.00]";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "TEKKEN 7 Bosses Trainer [v5.10]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel_instructions.ResumeLayout(false);

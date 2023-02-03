@@ -198,7 +198,7 @@ namespace TekkenTrainer
 
         static MemoryHelper64 mem = null;
         public static ulong baseAddress = 0;
-        // GAME VERSION: v4.24
+        // GAME VERSION: v5.10+
 
         // Structure Addresses
         public static ulong p1struct;
