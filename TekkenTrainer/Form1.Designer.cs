@@ -97,7 +97,7 @@
             // 
             this.button_quit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_quit.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_quit.Font = new System.Drawing.Font("Bahnschrift Condensed", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_quit.ForeColor = System.Drawing.Color.Black;
             this.button_quit.Location = new System.Drawing.Point(187, 505);
             this.button_quit.Name = "button_quit";
@@ -247,7 +247,7 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Font = new System.Drawing.Font("Bahnschrift Condensed", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.Black;
             this.button3.Location = new System.Drawing.Point(187, 437);
             this.button3.Name = "button3";
@@ -280,7 +280,7 @@
             // button_back
             // 
             this.button_back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_back.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_back.Font = new System.Drawing.Font("Bahnschrift Condensed", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_back.ForeColor = System.Drawing.Color.Black;
             this.button_back.Location = new System.Drawing.Point(29, 479);
             this.button_back.Name = "button_back";
@@ -411,7 +411,7 @@
             // 
             // button_update
             // 
-            this.button_update.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
+            this.button_update.Font = new System.Drawing.Font("Bahnschrift Condensed", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_update.ForeColor = System.Drawing.Color.Black;
             this.button_update.Location = new System.Drawing.Point(29, 479);
             this.button_update.Name = "button_update";
@@ -428,9 +428,9 @@
             this.label3.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(5, 536);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(128, 19);
+            this.label3.Size = new System.Drawing.Size(124, 19);
             this.label3.TabIndex = 25;
-            this.label3.Text = "Discord: Alee#0310";
+            this.label3.Text = "Discord: _Ali#0310";
             // 
             // labelYouTube
             // 
